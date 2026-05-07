@@ -1,18 +1,44 @@
 # Project log : kappa-kinisi
 
-## 03/03/2026 (Tue) — Project assigned
+---
 
-Project assigned: Investigations into the Numerical Stability of
-Covariance Matrix Inversions in the kinisi library.
+## 07/05/2026 (Thu) — T1.1 done + planning covariance deep-dive
+
+**Did**: Read McCluskey/Coles/Morgan paper end-to-end (T1.1).
+Identified the covariance matrix as the conceptual bottleneck
+that needs deeper grounding.
+
+**Next session**: Covariance matrix deep-dive — eigenvalues,
+condition number, Mahalanobis distance — then re-read Section 3
+of the paper with that grounding.
 
 ---
 
-## 05/03/2026 (Thu) — First supervisor meeting
+## 06/05/2026 (Wed) — Project repo created
 
-First meeting with supervisor Andrew McCluskey. Project framing
-established: investigate why the condition number k of the
-covariance matrix Σ' in kinisi gets large, beyond the band-aid
-reconditioning fix described in the paper.
+Created GitHub repository `kappa-kinisi`. Set up local folder
+structure (code, experiments/exp_a_length, notebooks, notes).
+Established working format for daily project log.
+
+---
+
+
+## 27/03/2026 to 06/05/2026 — Initial environment setup
+
+Set up kinisi locally and confirmed end-to-end pipeline works:
+- Installed kinisi, MDAnalysis, scipp, numpy, scipy, matplotlib
+- Ran initial 3D lattice random walk simulations
+- Confirmed D* recovered close to 1.0 across multiple seeds
+- Started preliminary plotting and diagnostic scripts
+
+---
+
+
+
+## 27/03/2026 (Fri) — Second supervisor meeting
+
+Discussion with Andrew on the major aspects suspected to drive κ
+upwards. 
 
 ---
 
@@ -40,37 +66,19 @@ number problem enters (likelihood evaluation in Eq. 5 requires Σ'⁻¹).
 
 ---
 
-## 27/03/2026 (Fri) — Second supervisor meeting
 
-Discussion with Andrew on the major aspects suspected to drive κ
-upwards. 
+## 05/03/2026 (Thu) — First supervisor meeting
 
----
-
-## 27/03/2026 to 06/05/2026 — Initial environment setup
-
-Set up kinisi locally and confirmed end-to-end pipeline works:
-- Installed kinisi, MDAnalysis, scipp, numpy, scipy, matplotlib
-- Ran initial 3D lattice random walk simulations
-- Confirmed D* recovered close to 1.0 across multiple seeds
-- Started preliminary plotting and diagnostic scripts
+First meeting with supervisor Andrew McCluskey. Project framing
+established: investigate why the condition number k of the
+covariance matrix Σ' in kinisi gets large, beyond the band-aid
+reconditioning fix described in the paper.
 
 ---
+## 03/03/2026 (Tue) — Project assigned
 
-## 06/05/2026 (Wed) — Project repo created
+Project assigned: Investigations into the Numerical Stability of
+Covariance Matrix Inversions in the kinisi library.
 
-Created GitHub repository `kappa-kinisi`. Set up local folder
-structure (code, experiments/exp_a_length, notebooks, notes).
-Established working format for daily project log.
 
----
-
-## 07/05/2026 (Thu) — T1.1 done + planning covariance deep-dive
-
-**Did**: Read McCluskey/Coles/Morgan paper end-to-end (T1.1).
-Identified the covariance matrix as the conceptual bottleneck
-that needs deeper grounding.
-
-**Next session**: Covariance matrix deep-dive — eigenvalues,
-condition number, Mahalanobis distance — then re-read Section 3
-of the paper with that grounding.
+ 
