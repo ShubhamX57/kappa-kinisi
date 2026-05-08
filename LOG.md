@@ -1,4 +1,14 @@
 # Project log : kappa-kinisi
+---
+
+## 08/05/2026 (Fri) — Covariance video
+
+**Did**: Watched a video on covariance matrices to start
+building the grounding needed for Section 3 of the paper.
+
+**Next session**: Continue covariance deep dive — eigenvalues,
+condition number, and Mahalanobis distance — then re-read Section 3
+of the paper with that grounding.
 
 ---
 
