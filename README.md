@@ -14,6 +14,7 @@ Based on:
 Numerical instability can arise when the covariance matrix used in diffusion analysis becomes poorly conditioned.
 
 A covariance matrix with a large condition number ($\kappa$) is nearly singular, making matrix inversion and Cholesky decomposition unreliable. This can lead to unstable estimates of diffusion coefficients ($D^*$).
+<<<<<<< HEAD
 
 In practice, instability often appears when:
 
@@ -31,3 +32,5 @@ A condition number approaching:
 
 ```math
 10^{16}
+=======
+>>>>>>> 34ce89f (Updated project description.)
