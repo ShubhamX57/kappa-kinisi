@@ -1,6 +1,14 @@
 # Project log : kappa-kinisi
 ---
+## 11/05/2025 (Mon) -   Completed core papers 
 
+**Did**: i) Tabeart et al. (2022) — "Improving the condition number of estimated covariance matrices" — this is the actual reference for the reconditioning method kinisi uses (paper ref 33). I am going to be testing alternatives to this method, so i must know what it does in detail.
+ii) Usler, Kemp, Bonkowski & De Souza (2023) — "A general expression for the statistical error in a diffusion coefficient" — paper ref 21 in McCluskey. Companion paper that frames why OLS uncertainty is wrong for MSD data.
+
+**Next session**: Going with reading more core papers.
+
+
+---
 ## 08/05/2026 (Fri) — Covariance video
 
 **Did**: Watched a video on covariance matrices to start
