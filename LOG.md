@@ -1,5 +1,18 @@
 # Project log : kappa-kinisi
 ---
+## 12/05/2026 (Tue) — Covariance deep-dive
+
+**Did**: Worked through covariance matrix material — eigenvalues,
+condition number, and Mahalanobis distance.
+
+**Learned**: [Pick one — e.g., "An ill-conditioned matrix means the
+data is squashed in one direction, and that direction is where
+inversion blows up errors."]
+
+**Next session**: Re-read Section 3 of the paper with this grounding,
+then start T1.2 — annotate Eq. 5.
+
+---
 ## 11/05/2025 (Mon) -   Completed core papers 
 
 **Did**: i) Tabeart et al. (2022) — "Improving the condition number of estimated covariance matrices" — this is the actual reference for the reconditioning method kinisi uses (paper ref 33). I am going to be testing alternatives to this method, so i must know what it does in detail.
