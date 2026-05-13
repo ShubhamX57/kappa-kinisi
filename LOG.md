@@ -1,4 +1,10 @@
 # Project log : kappa-kinisi
+
+---
+## 13/05/2026 (Wed) — Covariance
+
+**Did**: Worked on covariance matrix material. Did some sample plotting using matplotlib to get overview of covariance matrix.
+
 ---
 ## 12/05/2026 (Tue) — Covariance deep-dive
 
