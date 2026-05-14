@@ -1,4 +1,18 @@
 # Project log : kappa-kinisi
+---
+## 14/05/2026 (Thu) — Covariance plotting script
+
+**Did**: Wrote code/covariance_basics.py — a simple script that
+generates three plots: a correlated data scatter, the covariance
+matrix as a heatmap, and a demo of how the condition number grows
+as data is squashed. Ran it and saved the plots.
+
+**Learned**: Confirmed visually that a thinner data cloud gives a
+much bigger condition number — squashing the data 10x makes the
+condition number roughly 100x larger. This is the same mechanism
+behind kinisi's instability: a near-singular covariance matrix
+amplifies errors when inverted.
+
 
 ---
 ## 13/05/2026 (Wed) — Covariance
