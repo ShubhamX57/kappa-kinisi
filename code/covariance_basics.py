@@ -16,10 +16,7 @@ rng = np.random.default_rng(42)
 
 
 def make_data():
-    """
-    Make a cloud of 1000 points where x and y are correlated.
-    
-    """
+    """Make a cloud of 1000 points where x and y are correlated."""
     x = rng.normal(0, 1, 1000)
     y = rng.normal(0, 1, 1000)
     y = 0.8 * x + 0.6 * y  # mixing in x makes y correlated with x
@@ -27,9 +24,7 @@ def make_data():
 
 
 def plot_scatter(data):
-    """
-    Plot the data cloud. Correlation shows up as a tilt.
-    """
+    """Plot the data cloud. Correlation shows up as a tilt."""
     plt.figure(figsize=(6, 6))
     plt.scatter(data[:, 0], data[:, 1], alpha=0.3, s=10)
     plt.title("Correlated 2D data")
@@ -43,10 +38,7 @@ def plot_scatter(data):
 
 
 def plot_heatmap(data):
-    """
-    Plot the covariance matrix as a grid of numbers.
-    
-    """
+    """Plot the covariance matrix as a grid of numbers."""
     # np.cov needs the data transposed (variables as rows)
     cov = np.cov(data.T)
 
@@ -69,9 +61,7 @@ def plot_heatmap(data):
 
 
 def plot_condition_number():
-    """
-    Show how the condition number grows as the data is squashed.
-    """
+    """Show how the condition number grows as the data is squashed."""
     x = rng.normal(0, 1, 1000)
     y = rng.normal(0, 1, 1000)
 
@@ -97,7 +87,7 @@ def plot_condition_number():
         print(f"  squash {s} -> condition number {k:.1e}")
 
 
-
+# run everything
 data = make_data()
 plot_scatter(data)
 plot_heatmap(data)
