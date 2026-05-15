@@ -1,5 +1,15 @@
 # Project log : kappa-kinisi
 ---
+
+## 15/05/2026 (Fri) — Branch tidy-up
+
+**Did**: Moved covariance plotting work onto a `basic-testing` branch
+to keep `main` clean. Practised handling a few git tangles along the
+way (accidentally committed to main, force-push to fix it, sorting
+untracked files when switching branches).
+
+--- 
+
 ## 14/05/2026 (Thu) — Covariance plotting script
 
 **Did**: Wrote code/covariance_basics.py — a simple script that
