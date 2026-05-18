@@ -1,4 +1,13 @@
 # Project log : kappa-kinisi
+
+---
+## 18/05/2026 (Mon) - Portfolio Meeting with Project Assessor Dr. Cameron Beevers
+
+**Did:** Discussed the project portfolio, with focus on the covariance matrix and floating-point precision. Dr Beevers performed small example runs that demonstrated how floating-point errors may be the underlying issue behind the increasing number of *k*.
+
+**Next session:** Review the article suggested by Dr. Beevers on floating-point problems for further insights:
+https://jvns.ca/blog/2023/01/13/examples-of-floating-point-problems/
+
 ---
 
 ## 15/05/2026 (Fri) — Branch tidy-up
