@@ -1,4 +1,9 @@
 # Project log : kappa-kinisi
+---
+## 19/05/2026 (Tue) – Combined Portfolio Documentation  
+
+**Did:** Developed and refined the portfolio documentation, progressing from draft versions to a polished submission for Assessment Brief 2.
+
 
 ---
 ## 18/05/2026 (Mon) - Portfolio Meeting with Project Assessor Dr. Cameron Beevers
