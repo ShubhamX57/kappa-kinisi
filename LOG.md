@@ -1,5 +1,16 @@
 # Project log : kappa-kinisi
 ---
+## 20/05/2026 (Wed) — Portfolio submitted + FP article review
+
+**Did:** Submitted portfolio via Blackboard before midday deadline.
+Read Julia Evans' floating-point article (Cameron's suggestion).
+Example 3 (catastrophic cancellation in variance) maps directly onto
+Eq. 7 of the Andrew's paper - gives a fourth candidate root cause
+for large k alongside (A) correlation, (B) sample noise, (C) matrix size.
+
+**Next session:** Resume T1.2 (annotate Eq. 5). Write up suspect D in
+notes/. Raise FP hypothesis with Andrew.
+---
 ## 19/05/2026 (Tue) – Combined Portfolio Documentation  
 
 **Did:** Developed and refined the portfolio documentation, progressing from draft versions to a polished submission for Assessment Brief 2.
