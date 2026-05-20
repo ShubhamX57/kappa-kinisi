@@ -9,7 +9,8 @@ Eq. 7 of the Andrew's paper - gives a fourth candidate root cause
 for large k alongside (A) correlation, (B) sample noise, (C) matrix size.
 
 **Next session:** Resume T1.2 (annotate Eq. 5). Write up suspect D in
-notes/. Raise FP hypothesis with Andrew.
+notes. Raise FP hypothesis with Andrew.
+
 ---
 ## 19/05/2026 (Tue) – Combined Portfolio Documentation  
 
