@@ -1,4 +1,9 @@
 # Project log : kappa-kinisi
+
+---
+## 21/05/2026 (Thu) - Weitten some notes on floating-point 
+**Did:** Made a note on floating-point error and watched logic behide it.
+
 ---
 ## 20/05/2026 (Wed) — Portfolio submitted + FP article review
 
