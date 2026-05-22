@@ -1,8 +1,14 @@
 # Project log : kappa-kinisi
+---
+
+## 22/05/2026 (Fri) — Resumed Phase 1 reading
+
+**Did:** Back to the paper after the portfolio break. Started T1.2 —
+annotating Eq. 5 (the log-likelihood) in my own words, term by term.
 
 ---
 ## 21/05/2026 (Thu) - Weitten some notes on floating-point 
-**Did:** Made a note on floating-point error and watched logic behide it.
+**Did:** Made a note on floating-point error and watched video to understand logic behide it.
 
 ---
 ## 20/05/2026 (Wed) — Portfolio submitted + FP article review
