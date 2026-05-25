@@ -1,7 +1,16 @@
 # Project log : kappa-kinisi
+
+## 25/05/2026 (Mon) - emcee paper (Foreman-Mackey et al. 2019)
+
+**Did:** Read the emcee paper - the MCMC sampler kinisi uses to sample
+p(D*|x). Closes my mental picture of the kinisi pipeline: I now understand
+both the construction (upstream of likelihood) and the MCMC sampling
+(downstream of likelihood). Key concepts: affine-invariant ensemble
+sampler, 32 walkers, autocorrelation-based convergence diagnostics.
+
 ---
 
-## 22/05/2026 (Fri) — Resumed Phase 1 reading
+## 22/05/2026 (Fri) - Resumed Phase 1 reading
 
 **Did:** Back to the paper after the portfolio break. Started T1.2 —
 annotating Eq. 5 (the log-likelihood) in my own words, term by term.
