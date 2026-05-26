@@ -1,5 +1,11 @@
 # Project log : kappa-kinisi
+---
+## 26/05/2026 (Tue) — emcee notes
 
+**Did:** Made notes on Foreman-Mackey. Affine invariance and
+autocorrelation time are the two ideas to remember.
+
+---
 ## 25/05/2026 (Mon) - emcee paper (Foreman-Mackey et al. 2019)
 
 **Did:** Read the emcee paper - the MCMC sampler kinisi uses to sample
