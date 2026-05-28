@@ -1,4 +1,20 @@
 # Project log : kappa-kinisi
+
+---
+## 28/05/2026 (Thu) — Meeting with Andrew
+
+**Did:** Set up admin access on GitHub and Slack. Agreed weekly catch-ups
+every Monday. Discussed the four suspects for the large condition number
+(A: timestep correlation, B: noisy variance at long times, C: matrix size,
+D: floating-point cancellation). Noted B and D are the same problem
+at two levels.
+
+---
+## 27/05/2026 (Wed) — Reading on condition numbers
+
+**Did:** Looked up some background reading on condition numbers and
+covariance matrices to understand where the squash idea fits.
+
 ---
 ## 26/05/2026 (Tue) — emcee notes
 
