@@ -1,7 +1,14 @@
 # Project log : kappa-kinisi
 
 ---
-## 28/05/2026 (Thu) — Meeting with Andrew
+## 29/05/2026 (Fri) - Reading the paper Won et al. 2013
+
+**Did:** Reading the Won et al. 2013 on condition number regularized covariance estimation. 
+Foucing on condition number, convex optimization, covariance estimation, cross-validation and eigenvalue.
+
+
+---
+## 28/05/2026 (Thu) - Meeting with Andrew
 
 **Did:** Set up admin access on GitHub and Slack. Agreed weekly catch-ups
 every Monday. Discussed the four suspects for the large condition number
