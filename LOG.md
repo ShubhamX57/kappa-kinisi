@@ -1,6 +1,11 @@
 # Project log : kappa-kinisi
 
 ---
+## 30/05/2056 (Sat) - Working on Suspect A.
+
+**Did:** Working on Adjacent timesteps share data >> similar rows.
+
+---
 ## 29/05/2026 (Fri) - Reading the paper Won et al. 2013
 
 **Did:** Reading the Won et al. 2013 on condition number regularized covariance estimation. 
