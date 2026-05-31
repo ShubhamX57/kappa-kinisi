@@ -1,7 +1,12 @@
 # Project log : kappa-kinisi
 
 ---
-## 30/05/2056 (Sat) - Working on Suspect A.
+## 31/05/2026 (Sun) - Working on Equations 
+
+**Did:** Solved equations for Timestep correlation.
+
+---
+## 30/05/2026 (Sat) - Working on Suspect A.
 
 **Did:** Working on Adjacent timesteps share data >> similar rows.
 
