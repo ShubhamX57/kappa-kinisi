@@ -1,4 +1,14 @@
-# Project log : kappa-kinisi
+# Project log : kappa-kinisi|
+
+
+--- 
+## 01/06/2026 (Mon) - Met with supervisor (weekly meeting)
+
+**Did:** Discussed Suspect A and its timestep correlation with the Andrew. 
+Developed a weekly plan for conducting tests related to timestep analysis and validation. 
+Agreed to prepare a weekly presentation summarizing progress and findings to ensure that important 
+information is documented and retained between meetings.
+
 
 ---
 ## 31/05/2026 (Sun) - Working on Equations 
