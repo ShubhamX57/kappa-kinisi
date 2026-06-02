@@ -1,5 +1,10 @@
 # Project log : kappa-kinisi|
 
+## 02/06/2026 (Tue) — Switched to kinisi 2.0.5 environment
+
+**Did:** Set up a clean conda env `kappa-kinisi` (Python 3.11.15) and
+installed kinisi 2.0.5 from GitHub. This matches the version Andrew is working on. Kept the old .venv (1.1.1)
+as a fallback. All further work is on this 2.0.5 env.
 
 --- 
 ## 01/06/2026 (Mon) - Met with supervisor (weekly meeting)
