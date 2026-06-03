@@ -1,4 +1,4 @@
-# Project log : kappa-kinisi|
+# Project log : kappa-kinisi 
 
 ## 03/06/2026 (Wed) — Eigenvalue comparison: sample vs analytical
 
