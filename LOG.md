@@ -1,5 +1,13 @@
 # Project log : kappa-kinisi|
 
+## 03/06/2026 (Tue) — Eigenvalue comparison: sample vs analytical
+
+**Did:** Compared sample vs analytical (Eq. S-32) covariance eigenvalues on
+kinisi 2.0.5, 4096 walks. Largest eigenvalue unbiased (85,100 vs 86,400);
+smallest collapses (81% negative, analytical only +0.003). Confirms Andrew's
+finding, justifies the shrinkage reconditioning.
+
+
 ## 02/06/2026 (Tue) — Switched to kinisi 2.0.5 environment
 
 **Did:** Set up a clean conda env `kappa-kinisi` (Python 3.11.15) and
