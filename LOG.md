@@ -1,6 +1,6 @@
 # Project log : kappa-kinisi|
 
-## 03/06/2026 (Tue) — Eigenvalue comparison: sample vs analytical
+## 03/06/2026 (Wed) — Eigenvalue comparison: sample vs analytical
 
 **Did:** Compared sample vs analytical (Eq. S-32) covariance eigenvalues on
 kinisi 2.0.5, 4096 walks. Largest eigenvalue unbiased (85,100 vs 86,400);
