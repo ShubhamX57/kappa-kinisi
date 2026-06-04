@@ -1,6 +1,6 @@
 # Project log : kappa-kinisi 
 
-## 04/06/2026 (Wed) — Suspect A: premise true, not the direct cause
+## 04/06/2026 (Wed) - Suspect A: premise true, not the direct cause
 
 **Did:** Tested Suspect A. Premise confirmed (adjacent rows 0.99998
 correlated), but reducing overlap doesn't help - slightly worsens it - and the
@@ -13,7 +13,7 @@ analysis, annotated the notebook.
 
 **Next session:** Multi seed eigenvector check, then N_atoms sweep (B vs D).
 
-## 03/06/2026 (Wed) — Eigenvalue comparison: sample vs analytical
+## 03/06/2026 (Wed) - Eigenvalue comparison: sample vs analytical
 
 **Did:** Compared sample vs analytical (Eq. S-32) covariance eigenvalues on
 kinisi 2.0.5, 4096 walks. Largest eigenvalue unbiased (85,100 vs 86,400);
@@ -21,7 +21,7 @@ smallest collapses (81% negative, analytical only +0.003). Confirms Andrew's
 finding, justifies the shrinkage reconditioning.
 
 
-## 02/06/2026 (Tue) — Switched to kinisi 2.0.5 environment
+## 02/06/2026 (Tue) - Switched to kinisi 2.0.5 environment
 
 **Did:** Set up a clean conda env `kappa-kinisi` (Python 3.11.15) and
 installed kinisi 2.0.5 from GitHub. This matches the version Andrew is working on. Kept the old .venv (1.1.1)
@@ -63,13 +63,13 @@ D: floating-point cancellation). Noted B and D are the same problem
 at two levels.
 
 ---
-## 27/05/2026 (Wed) — Reading on condition numbers
+## 27/05/2026 (Wed) - Reading on condition numbers
 
 **Did:** Looked up some background reading on condition numbers and
 covariance matrices to understand where the squash idea fits.
 
 ---
-## 26/05/2026 (Tue) — emcee notes
+## 26/05/2026 (Tue) - emcee notes
 
 **Did:** Made notes on Foreman-Mackey. Affine invariance and
 autocorrelation time are the two ideas to remember.
@@ -87,7 +87,7 @@ sampler, 32 walkers, autocorrelation-based convergence diagnostics.
 
 ## 22/05/2026 (Fri) - Resumed Phase 1 reading
 
-**Did:** Back to the paper after the portfolio break. Started T1.2 —
+**Did:** Back to the paper after the portfolio break. Started T1.2 -
 annotating Eq. 5 (the log-likelihood) in my own words, term by term.
 
 ---
@@ -95,7 +95,7 @@ annotating Eq. 5 (the log-likelihood) in my own words, term by term.
 **Did:** Made a note on floating-point error and watched video to understand logic behide it.
 
 ---
-## 20/05/2026 (Wed) — Portfolio submitted + FP article review
+## 20/05/2026 (Wed) - Portfolio submitted + FP article review
 
 **Did:** Submitted portfolio via Blackboard before midday deadline.
 Read Julia Evans' floating-point article (Cameron's suggestion).
@@ -122,7 +122,7 @@ https://jvns.ca/blog/2023/01/13/examples-of-floating-point-problems/
 
 ---
 
-## 15/05/2026 (Fri) — Branch tidy-up
+## 15/05/2026 (Fri) - Branch tidy-up
 
 **Did**: Moved covariance plotting work onto a `basic-testing` branch
 to keep `main` clean. Practised handling a few git tangles along the
@@ -131,72 +131,72 @@ untracked files when switching branches).
 
 --- 
 
-## 14/05/2026 (Thu) — Covariance plotting script
+## 14/05/2026 (Thu) - Covariance plotting script
 
-**Did**: Wrote code/covariance_basics.py — a simple script that
+**Did**: Wrote code/covariance_basics.py - a simple script that
 generates three plots: a correlated data scatter, the covariance
 matrix as a heatmap, and a demo of how the condition number grows
 as data is squashed. Ran it and saved the plots.
 
 **Learned**: Confirmed visually that a thinner data cloud gives a
-much bigger condition number — squashing the data 10x makes the
+much bigger condition number - squashing the data 10x makes the
 condition number roughly 100x larger. This is the same mechanism
 behind kinisi's instability: a near-singular covariance matrix
 amplifies errors when inverted.
 
 
 ---
-## 13/05/2026 (Wed) — Covariance
+## 13/05/2026 (Wed) - Covariance
 
 **Did**: Worked on covariance matrix material. Did some sample plotting using matplotlib to get overview of covariance matrix.
 
 ---
-## 12/05/2026 (Tue) — Covariance deep-dive
+## 12/05/2026 (Tue) - Covariance deep-dive
 
-**Did**: Worked through covariance matrix material — eigenvalues,
+**Did**: Worked through covariance matrix material - eigenvalues,
 condition number, and Mahalanobis distance.
 
-**Learned**: [Pick one — e.g., "An ill-conditioned matrix means the
+**Learned**: [Pick one - e.g., "An ill-conditioned matrix means the
 data is squashed in one direction, and that direction is where
 inversion blows up errors."]
 
 **Next session**: Re-read Section 3 of the paper with this grounding,
-then start T1.2 — annotate Eq. 5.
+then start T1.2 - annotate Eq. 5.
 
 ---
 ## 11/05/2025 (Mon) -   Completed core papers 
 
-**Did**: i) Tabeart et al. (2022) — "Improving the condition number of estimated covariance matrices" — this is the actual reference for the reconditioning method kinisi uses (paper ref 33). I am going to be testing alternatives to this method, so i must know what it does in detail.
-ii) Usler, Kemp, Bonkowski & De Souza (2023) — "A general expression for the statistical error in a diffusion coefficient" — paper ref 21 in McCluskey. Companion paper that frames why OLS uncertainty is wrong for MSD data.
+**Did**: i) Tabeart et al. (2022) - "Improving the condition number of estimated covariance matrices" - this is the actual reference for the reconditioning method kinisi uses (paper ref 33). I am going to be testing alternatives to this method, so i must know what it does in detail.
+ii) Usler, Kemp, Bonkowski & De Souza (2023) - "A general expression for the statistical error in a diffusion coefficient" - paper ref 21 in McCluskey. Companion paper that frames why OLS uncertainty is wrong for MSD data.
 
 **Next session**: Going with reading more core papers.
 
 
 ---
-## 08/05/2026 (Fri) — Covariance video
+## 08/05/2026 (Fri) - Covariance video
 
 **Did**: Watched a video on covariance matrices to start
 building the grounding needed for Section 3 of the paper.
 
-**Next session**: Continue covariance deep dive — eigenvalues,
-condition number, and Mahalanobis distance — then re-read Section 3
+**Next session**: Continue covariance deep dive - eigenvalues,
+condition number, and Mahalanobis distance - then re-read Section 3
 of the paper with that grounding.
 
 ---
 
-## 07/05/2026 (Thu) — T1.1 done + planning covariance deep-dive
+## 07/05/2026 (Thu) - T1.1 done + planning covariance deep-dive
 
 **Did**: Read McCluskey/Coles/Morgan paper end-to-end (T1.1).
 Identified the covariance matrix as the conceptual bottleneck
 that needs deeper grounding.
 
-**Next session**: Covariance matrix deep-dive — eigenvalues,
-condition number, Mahalanobis distance — then re-read Section 3
+**Next session**: Covariance matrix deep-dive - eigenvalues,
+condition number, Mahalanobis distance - then re-read Section 3
 of the paper with that grounding.
 
 ---
 
-## 06/05/2026 (Wed) — Project repo created
+## 06/05/2026 (Wed) - Project repo created
 
 Created GitHub repository `kappa-kinisi`. Set up local folder
 structure (code, experiments/exp_a_length, notebooks, notes).
@@ -205,7 +205,7 @@ Established working format for daily project log.
 ---
 
 
-## 27/03/2026 to 06/05/2026 — Initial environment setup
+## 27/03/2026 to 06/05/2026 - Initial environment setup
 
 Set up kinisi locally and confirmed end-to-end pipeline works:
 - Installed kinisi, MDAnalysis, scipp, numpy, scipy, matplotlib
@@ -217,14 +217,14 @@ Set up kinisi locally and confirmed end-to-end pipeline works:
 
 
 
-## 27/03/2026 (Fri) — Second supervisor meeting
+## 27/03/2026 (Fri) - Second supervisor meeting
 
 Discussion with Andrew on the major aspects suspected to drive κ
 upwards. 
 
 ---
 
-## 05/03/2026 to 27/03/2026 — Background reading and material study
+## 05/03/2026 to 27/03/2026 - Background reading and material study
 
 **Reading list worked through:**
 
@@ -237,7 +237,7 @@ upwards.
   https://kinisi.readthedocs.io/en/latest/
 - kinisi GitHub repository:
   https://github.com/kinisi-dev/kinisi
-- Specific code reference — line 241 of diffusion.py
+- Specific code reference - line 241 of diffusion.py
   (covariance matrix construction site):
   https://github.com/kinisi-dev/kinisi/blob/1861ba0dacda882b1be2e42c4262b66f842478e9/kinisi/diffusion.py#L241
 
@@ -249,7 +249,7 @@ number problem enters (likelihood evaluation in Eq. 5 requires Σ'⁻¹).
 ---
 
 
-## 05/03/2026 (Thu) — First supervisor meeting
+## 05/03/2026 (Thu) - First supervisor meeting
 
 First meeting with supervisor Andrew McCluskey. Project framing
 established: investigate why the condition number k of the
@@ -257,7 +257,7 @@ covariance matrix Σ' in kinisi gets large, beyond the band-aid
 reconditioning fix described in the paper.
 
 ---
-## 03/03/2026 (Tue) — Project assigned
+## 03/03/2026 (Tue) - Project assigned
 
 Project assigned: Investigations into the Numerical Stability of
 Covariance Matrix Inversions in the kinisi library.
