@@ -1,5 +1,18 @@
 # Project log : kappa-kinisi 
 
+## 04/06/2026 (Wed) — Suspect A: premise true, not the direct cause
+
+**Did:** Tested Suspect A. Premise confirmed (adjacent rows 0.99998
+correlated), but reducing overlap doesn't help - slightly worsens it - and the
+collapsing eigenvector sits at the long time tail, not spread out as pure A
+predicts. Points to long time noise (B/D) as the trigger, with A providing the
+fragile structure and C mostly cutting the noisy tail. Wrote report + deep
+analysis, annotated the notebook.
+
+**Caveat:** eigenvector is one seed so far.
+
+**Next session:** Multi seed eigenvector check, then N_atoms sweep (B vs D).
+
 ## 03/06/2026 (Wed) — Eigenvalue comparison: sample vs analytical
 
 **Did:** Compared sample vs analytical (Eq. S-32) covariance eigenvalues on
