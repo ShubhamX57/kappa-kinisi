@@ -1,5 +1,9 @@
 # Project log : kappa-kinisi 
 
+## 05/06/2026 (Fri) -  Read Michalet (2010, Phys Rev E 82:041914) 
+MSD estimation accuracy, covers correlated values at large lag times and the trade off in how
+many lag points to use; directly relevant to the long time tail finding.
+
 ## 04/06/2026 (Wed) - Suspect A: premise true, not the direct cause
 
 **Did:** Tested Suspect A. Premise confirmed (adjacent rows 0.99998
