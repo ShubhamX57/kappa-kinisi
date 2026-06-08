@@ -1,5 +1,9 @@
 # Project log : kappa-kinisi 
 
+## 08/06/2026 (Mon) - Met with supervisor (weekly meeting)
+**Did:** Discussed on suspect A test results. Given overview about testing suspect B with different numbers of N_Atoms size to andrew with help of ppt.
+
+
 ## 05/06/2026 (Fri) -  Read Michalet (2010, Phys Rev E 82:041914) 
 MSD estimation accuracy, covers correlated values at large lag times and the trade off in how
 many lag points to use; directly relevant to the long time tail finding.
