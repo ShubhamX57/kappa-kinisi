@@ -8,7 +8,7 @@
 MSD estimation accuracy, covers correlated values at large lag times and the trade off in how
 many lag points to use; directly relevant to the long time tail finding.
 
-## 04/06/2026 (Wed) - Suspect A: premise true, not the direct cause
+## 04/06/2026 (Thu) - Suspect A: premise true, not the direct cause
 
 **Did:** Tested Suspect A. Premise confirmed (adjacent rows 0.99998
 correlated), but reducing overlap doesn't help - slightly worsens it - and the
