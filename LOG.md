@@ -5,8 +5,8 @@
 **Did:** Atom sweep (64 to 16384, 200 runs each): non PD fraction falls
 90.5% -> 0.5% as atoms increase, median lambda_min climbs from -157 to 0.
 Collapse goes to zero, not a plateau -> it's sample noise (B), not floating
-point (D). Completes the four-suspect picture: A structural fragility, C not
-independent, B the trigger. Discussed denoising with Andrew - proposed to investigate some other shrinking/reconditioning approaches. Can you search the literature
+point (D). Completes the four suspect picture: A structural fragility, C not
+independent, B the trigger. Discussed denoising with Andrew - proposed to investigate some other shrinking/reconditioning approaches and search for more the literature.
 
 **Next session:** Read Michalet (2010). Try variance modelling denoise properly.
 
