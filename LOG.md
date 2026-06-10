@@ -18,7 +18,7 @@ Collapse goes to zero, not a plateau -> it's sample noise (B), not floating
 point (D). Completes the four suspect picture: A structural fragility, C not
 independent, B the trigger. Discussed denoising with Andrew - proposed to investigate some other shrinking/reconditioning approaches and search for more the literature.
 
-**Next session:** Read Michalet (2010). Try variance modelling denoise properly.
+
 
 ## 08/06/2026 (Mon) - Met with supervisor (weekly meeting)
 **Did:** Discussed on suspect A test results. Given overview about testing suspect B with different numbers of N_Atoms size to andrew with help of ppt.
