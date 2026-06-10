@@ -1,5 +1,15 @@
 # Project log : kappa-kinisi
 
+## 10/06/2026 (Wed) - Literature on shrinkage/reconditioning
+
+**Did:** Literature search on shrinkage/reconditioning approaches. 
+
+Papers:
+- Tabeart et al. 2020, Tellus A — source of kinisi's minimum_eigenvalue_method; ridge; condition-number target choice
+- Ledoit & Wolf 2004, J. Multivariate Analysis — linear shrinkage
+- Ledoit & Wolf 2012 (arXiv:1207.5322) + 2020, Annals of Statistics — non-linear / analytical non-linear shrinkage
+
+
 ## 09/06/2026 (Tue) - Suspect B confirmed: sample noise
 
 **Did:** Atom sweep (64 to 16384, 200 runs each): non PD fraction falls
