@@ -1,5 +1,12 @@
 # Project log : kappa-kinisi
 
+## 11/06/2026 (Thu) - Agreed approach with Andrew
+
+**Did:** Agreed with Andrew to test reconditioning methods empirically on our own
+matrices (ground truth available: analytical matrix, true D = 1) rather than
+picking from the literature.
+
+
 ## 10/06/2026 (Wed) - Literature on shrinkage/reconditioning
 
 **Did:** Literature search on shrinkage/reconditioning approaches. 
