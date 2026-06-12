@@ -1,6 +1,6 @@
 # Project log : kappa-kinisi
 
-## 13/06/2026 (Fri) - Working on Fixing Suspect B
+## 12/06/2026 (Fri) - Working on Fixing Suspect B
 
 **Did:** Fixing Suspect B: comparison of reconditioning approaches in ipynb file on raw covariance matrices.
 
