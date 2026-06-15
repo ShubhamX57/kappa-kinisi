@@ -1,18 +1,24 @@
 # Project log : kappa-kinisi
+---
+## 15/06/2026 (Mon) - Met with supervisor (weekly meeting)
 
+**Did:** Discussed on suspect B fixing and how does pinvh function give D value everytime correct.
+Agreed on the futher more investigation on reconditioning and inverse methods.
+
+---
 ## 12/06/2026 (Fri) - Working on Fixing Suspect B
 
 **Did:** Fixing Suspect B: comparison of reconditioning approaches in ipynb file on raw covariance matrices.
 
 
-
+---
 ## 11/06/2026 (Thu) - Agreed approach with Andrew
 
 **Did:** Agreed with Andrew to test reconditioning methods empirically on our own
 matrices (ground truth available: analytical matrix, true D = 1) rather than
 picking from the literature.
 
-
+---
 ## 10/06/2026 (Wed) - Literature on shrinkage/reconditioning
 
 **Did:** Literature search on shrinkage/reconditioning approaches. 
@@ -22,7 +28,7 @@ Papers:
 - Ledoit & Wolf 2004, J. Multivariate Analysis - linear shrinkage
 - Ledoit & Wolf 2012 (arXiv:1207.5322) + 2020, Annals of Statistics - non-linear / analytical non-linear shrinkage
 
-
+---
 ## 09/06/2026 (Tue) - Suspect B confirmed: sample noise
 
 **Did:** Atom sweep (64 to 16384, 200 runs each): non PD fraction falls
@@ -32,15 +38,15 @@ point (D). Completes the four suspect picture: A structural fragility, C not
 independent, B the trigger. Discussed denoising with Andrew - proposed to investigate some other shrinking/reconditioning approaches and search for more the literature.
 
 
-
+---
 ## 08/06/2026 (Mon) - Met with supervisor (weekly meeting)
 **Did:** Discussed on suspect A test results. Given overview about testing suspect B with different numbers of N_Atoms size to andrew with help of ppt.
 
-
+---
 ## 05/06/2026 (Fri) -  Read Michalet (2010, Phys Rev E 82:041914) 
 MSD estimation accuracy, covers correlated values at large lag times and the trade off in how
 many lag points to use; directly relevant to the long time tail finding.
-
+---
 ## 04/06/2026 (Thu) - Suspect A: premise true, not the direct cause
 
 **Did:** Tested Suspect A. Premise confirmed (adjacent rows 0.99998
@@ -53,7 +59,7 @@ analysis, annotated the notebook.
 **Caveat:** eigenvector is one seed so far.
 
 **Next session:** Multi seed eigenvector check, then N_atoms sweep (B vs D).
-
+---
 ## 03/06/2026 (Wed) - Eigenvalue comparison: sample vs analytical
 
 **Did:** Compared sample vs analytical (Eq. S-32) covariance eigenvalues on
@@ -61,7 +67,7 @@ kinisi 2.0.5, 4096 walks. Largest eigenvalue unbiased (85,100 vs 86,400);
 smallest collapses (81% negative, analytical only +0.003). Confirms Andrew's
 finding, justifies the shrinkage reconditioning.
 
-
+---
 ## 02/06/2026 (Tue) - Switched to kinisi 2.0.5 environment
 
 **Did:** Set up a clean conda env `kappa-kinisi` (Python 3.11.15) and
