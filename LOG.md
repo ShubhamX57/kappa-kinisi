@@ -1,5 +1,9 @@
 # Project log : kappa-kinisi
 
+## 17/06/2026 (Wed) - Full reconditioning x inverse search 
+
+**Did** Perfomed the full reconditioning x inverse search (8 x 5 = 40 combinations) scored on both D recovery and the matrix conditioning. Discussed the get anomalous values with andrew, working on LiPS example for validating anomalous values.
+
 ---
 ## 16/06/2026 (Tue) - search for new reconditioners + new inverses
 
