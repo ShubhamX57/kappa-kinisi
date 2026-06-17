@@ -1,5 +1,11 @@
 # Project log : kappa-kinisi
+
 ---
+## 16/06/2026 (Tue) - search for new reconditioners + new inverses
+
+**Did:** Searched for what are other alternatives methods with repect to reconditioing and inverse to get Kappa fix
+and best D values.
+
 ## 15/06/2026 (Mon) - Met with supervisor (weekly meeting)
 
 **Did:** Discussed on suspect B fixing and how does pinvh function give D value everytime correct.
