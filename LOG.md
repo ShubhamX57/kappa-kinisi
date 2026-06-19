@@ -1,5 +1,29 @@
 # Project log : kappa-kinisi
 
+## 19/06/2026 (Fri) - S-15 structure analysis
+
+**Did:** Built de noised "true" eigenvalue spectrum from Eq. S-15. Tested
+structural predictors - bulk deviation looked promising on 5 seeds but the
+500 seed run disproved it. Confirmed no simple metric (κ, frac_neg, n_pos,
+bulk dev) separates broken from normal across 16/32 atoms. pinvh handles even
+61% negative matrices fine.
+
+**Learned:** Non PD ≠ anomalous D. Failure is rare (~ 0.02%), not captured by
+spectral summary stats.
+
+**Next:** Full multi atom 16k run to study failures as a population.
+
+---
+## 18/06/2026 (Thu) - Found the failure + adaptive floor confirmed
+
+**Did:** Reproduced LiPS failure (D=1.1e-8). Hunted 16k seeds at 32 atoms: found
+3 anomalies (seeds 295, 14460, 15770). Proved failure is structural, not κ
+(3 angles). Confirmed via real Bayesian fit: raw broken seeds give D=0.000,
+adaptive floor recovers to ~ 1.0, normal untouched. Seed 295 partial (curved MSD).
+
+**Learned:** Failures split into matrix driven (fixable) and data driven (not).
+
+**Next:** Get Eq. S-15, build true eigenvalue structure.
 ## 17/06/2026 (Wed) - Full reconditioning x inverse search 
 
 **Did** Perfomed the full reconditioning x inverse search (8 x 5 = 40 combinations) scored on both D recovery and the matrix conditioning. Discussed the get anomalous values with andrew, working on LiPS example for validating anomalous values.
