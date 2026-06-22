@@ -1,5 +1,18 @@
 # Project log : kappa-kinisi
 
+## 22/06/2026 (Mon) - Population run: no metric separates failures
+
+**Did:** Parallelised the failure hunt with joblib on the uni machine
+(Andrew's suggestion). Ran 64,000 fits (16/24/32/48 atoms x 16k),
+found 14 anomalies. kappa_pos (condition number of the positive eigenvalue
+subspace) looked perfect at first but the robustness checks killed it - no
+clean gap, fails within each atom count, poor out of sample prediction.
+
+**Next:** Eigenvector alignment analysis - does the failure come from tiny
+eigenvectors aligning with the fit signal?
+
+---
+
 ## 19/06/2026 (Fri) - S-15 structure analysis
 
 **Did:** Built de noised "true" eigenvalue spectrum from Eq. S-15. Tested
@@ -8,7 +21,7 @@ structural predictors - bulk deviation looked promising on 5 seeds but the
 bulk dev) separates broken from normal across 16/32 atoms. pinvh handles even
 61% negative matrices fine.
 
-**Learned:** Non PD ≠ anomalous D. Failure is rare (~ 0.02%), not captured by
+**Learned:** Non PD is not anomalous D. Failure is rare (~ 0.02%), not captured by
 spectral summary stats.
 
 **Next:** Full multi atom 16k run to study failures as a population.
