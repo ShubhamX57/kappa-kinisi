@@ -6,6 +6,7 @@
 **Did** Collected a population of failures", "Run 16/24/32/48 atoms x 16k seeds, storing structural metrics per seed - so I have dozens of failures to study, not 3. Tested all metrics at scale", "With a real population, settle definitively whether any structural metric separates the failures and  evaluating results for futher steps.
 
 
+---
 ## 22/06/2026 (Mon) - Population run: no metric separates failures
 
 **Did:** Parallelised the failure hunt with joblib on the uni machine
