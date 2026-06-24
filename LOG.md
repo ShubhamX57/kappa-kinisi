@@ -4,12 +4,12 @@
 
 ## 24/06/2026 (Wed) - Write-up for poster 
 
-**Did** Plotting from results and write-up for poster. 
+**Did:** Plotting from results and write-up for poster. 
 
 ---
 ## 23/06/2026 (Tue) - Collected a population of failures
 
-**Did** Collected a population of failures", "Run 16/24/32/48 atoms x 16k seeds, storing structural metrics per seed - so I have dozens of failures to study, not 3. Tested all metrics at scale", "With a real population, settle definitively whether any structural metric separates the failures and  evaluating results for futher steps.
+**Did:** Collected a population of failures", "Run 16/24/32/48 atoms x 16k seeds, storing structural metrics per seed - so I have dozens of failures to study, not 3. Tested all metrics at scale", "With a real population, settle definitively whether any structural metric separates the failures and  evaluating results for futher steps.
 
 
 ---
