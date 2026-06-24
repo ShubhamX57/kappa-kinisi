@@ -1,5 +1,7 @@
 # Project log : kappa-kinisi
 
+---
+
 ## 24/06/2026 (Wed) - Write-up for poster 
 
 **Did** Plotting from results and write-up for poster. 
