@@ -1,5 +1,21 @@
 # Project log : kappa-kinisi
 
+## 26/06/2026 (Fri) - Regenerated data + wired up eigenvector-alignment
+
+**Did:** Local .npz was corrupted (BadZipFile), so rebuilt model/no_model from
+the canonical pipeline (regenerate_data.py) and wired up the eigenvector-
+alignment analysis (amplified_slope = sum(proj_slope^2 / lambda)).
+
+
+---
+
+## 25/06/2026 (Thu) - Poster rebuilt for A0 + reviewed Andrew's notebook
+
+**Did:** Rebuilt poster to true A0 ratio. Reviewed Andrew's eigenvalue notebook - model variance
+is single scale (constant log var), raw matrices indefinite.
+
+
+
 ---
 
 ## 24/06/2026 (Wed) - Write-up for poster 
