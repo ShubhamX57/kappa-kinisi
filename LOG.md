@@ -1,5 +1,12 @@
 # Project log : kappa-kinisi
 
+## 29/06/2026b (Mon) - Met with supervisor (weekly meeting)
+
+**Did** Discussed the application of adaptive flooring to obtain the corrected D value and compared the adaptive flooring model with the model based on Eq. S-15.
+Formatted the poster and generated high quality plots in PDF format for improved poster visualization.
+
+---
+
 ## 26/06/2026 (Fri) - Regenerated data + wired up eigenvector-alignment
 
 **Did:** Local .npz was corrupted (BadZipFile), so rebuilt model/no_model from
