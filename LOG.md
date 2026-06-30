@@ -1,5 +1,8 @@
 # Project log : kappa-kinisi
 
+## 30/06/2026 (Tue) - Meeting with Project Assessor Dr. Cameron Beevers
+
+---
 ## 29/06/2026b (Mon) - Met with supervisor (weekly meeting)
 
 **Did** Discussed the application of adaptive flooring to obtain the corrected D value and compared the adaptive flooring model with the model based on Eq. S-15.
