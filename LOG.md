@@ -1,5 +1,9 @@
 # Project log : kappa-kinisi
 
+## 01/07/2026 (Wed) - Poster assest and write-up.
+---
+**Did** Rebuilt as editable SVG + split assets; copy updated to revised text.
+
 ## 30/06/2026 (Tue) - Meeting with Project Assessor Dr. Cameron Beevers
 
 ---
