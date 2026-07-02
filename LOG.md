@@ -1,9 +1,17 @@
 # Project log : kappa-kinisi
 
-## 01/07/2026 (Wed) - Poster assest and write-up.
+
+## 02/07/2026 (Thu) - Comparison of S-15 eq vs no model vs floored model.
+
+**Did:** Applied the flooring to raw matrix, plotted the recover matrix and comparison of S-15 eq vs no model vs floored model.
+
 ---
+
+## 01/07/2026 (Wed) - Poster assest and write-up.
+
 **Did** Rebuilt as editable SVG + split assets; copy updated to revised text.
 
+---
 ## 30/06/2026 (Tue) - Meeting with Project Assessor Dr. Cameron Beevers
 
 ---
