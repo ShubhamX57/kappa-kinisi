@@ -1,5 +1,9 @@
 # Project log : kappa-kinisi
 
+## 03/07/2026 (Fri) - Read paper on the florring.
+
+---
+
 
 ## 02/07/2026 (Thu) - Comparison of S-15 eq vs no model vs floored model.
 
