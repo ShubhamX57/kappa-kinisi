@@ -1,4 +1,9 @@
 # Project log : kappa-kinisi
+## 04/07/2026 (Mon) - Adaptive flooring was applied to the raw covariance matrix.
+**Did** The raw matrix was decomposed, eigenvalues below the adaptive threshold were lifted, and the covariance matrix was reconstructed.  
+The comparison tests whether is closer to the S-15 target matrix than the raw `no_model` matrix. 
+
+---
 
 ## 03/07/2026 (Fri) - Read paper on the florring.
 
