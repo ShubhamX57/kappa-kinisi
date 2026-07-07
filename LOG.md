@@ -1,5 +1,15 @@
 # Project log : kappa-kinisi
-## 04/07/2026 (Mon) - Adaptive flooring was applied to the raw covariance matrix.
+
+## 07/07/2026 (Tue) - Matrix repair and target-regularisation analysis
+
+**Did:** Extended the matrix level analysis comparing the raw `no_model`
+covariance matrix, adaptive floored covariance, and the S-15 target
+covariance. Confirmed that adaptive flooring removes the negative eigenvalue
+tail and greatly improves conditioning, but does not substantially reconstruct
+the full S-15 target matrix by Frobenius error.
+
+---
+## 06/07/2026 (Mon) - Adaptive flooring was applied to the raw covariance matrix.
 **Did** The raw matrix was decomposed, eigenvalues below the adaptive threshold were lifted, and the covariance matrix was reconstructed.  
 The comparison tests whether is closer to the S-15 target matrix than the raw `no_model` matrix. 
 
@@ -150,6 +160,10 @@ independent, B the trigger. Discussed denoising with Andrew - proposed to invest
 **Did:** Discussed on suspect A test results. Given overview about testing suspect B with different numbers of N_Atoms size to andrew with help of ppt.
 
 ---
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 ## 05/06/2026 (Fri) -  Read Michalet (2010, Phys Rev E 82:041914) 
 MSD estimation accuracy, covers correlated values at large lag times and the trade off in how
 many lag points to use; directly relevant to the long time tail finding.
