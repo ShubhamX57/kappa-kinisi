@@ -8,7 +8,7 @@ Numerical stability of covariance-matrix inversions in `kinisi`.
 standard diagnostics report the matrix as healthy.
 
 
-<img src="bp2.png" alt="alt text" width="200">
+<img src="asset/bp2.png" alt="alt text" width="200">
 
 
 ## Results (all reproduced in the notebooks)
