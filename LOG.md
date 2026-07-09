@@ -1,5 +1,13 @@
 # Project log : kappa-kinisi
 
+## 08/07/2026 (Wed) - Full notebook review + README
+
+**Did:** Reviewed the notebook set, confirmed the 64,000 fit / 14 anomaly result (per size split),
+the kappa_pos post mortem (separation 1.00 is a scoring artifact: fails clean gap, within group,
+out-of-sample), the c=0.25 plateau, and real fit coverage. Rewrote the README from verified results.
+
+**Next:** Run all 14 anomalies through realfit_with_treatment; then the eigenvector-alignment diagnostic.
+
 ## 07/07/2026 (Tue) - Matrix repair and target-regularisation analysis
 
 **Did:** Extended the matrix level analysis comparing the raw `no_model`
