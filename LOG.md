@@ -4,7 +4,7 @@
 
 **Did:** Reviewed the notebook set, confirmed the 64,000 fit / 14 anomaly result (per size split),
 the kappa_pos post mortem (separation 1.00 is a scoring artifact: fails clean gap, within group,
-out-of-sample), the c=0.25 plateau, and real fit coverage. Rewrote the README from verified results.
+out of msample), the c=0.25 plateau, and real fit coverage. Rewrote the README from verified results.
 
 ---
 
