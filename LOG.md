@@ -6,7 +6,7 @@
 the kappa_pos post mortem (separation 1.00 is a scoring artifact: fails clean gap, within group,
 out-of-sample), the c=0.25 plateau, and real fit coverage. Rewrote the README from verified results.
 
-**Next:** Run all 14 anomalies through realfit_with_treatment; then the eigenvector-alignment diagnostic.
+---
 
 ## 07/07/2026 (Tue) - Matrix repair and target-regularisation analysis
 
