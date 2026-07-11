@@ -1,5 +1,8 @@
 # Project log : kappa-kinisi
 
+
+## 09/07/2026 (Thu) - 
+
 ## 08/07/2026 (Wed) - Full notebook review + README
 
 **Did:** Reviewed the notebook set, confirmed the 64,000 fit / 14 anomaly result (per size split),
