@@ -1,7 +1,125 @@
 # Project log : kappa-kinisi
 
-
-## 09/07/2026 (Thu) - 
+## 24/07/2026 (Fri) - Notebook restyled and finalised
+ 
+**Did:** Rebuilt the analysis notebook with lowercase variables, docstrings and plain prose,
+leaving checkpoint dict keys alone since they are written to disk. Fixed three latent bugs:
+`realfit_with_treatment` defined after the cell that calls it, a duplicate MSD cell drawing onto
+stale axes, and two cells labelled LiPS that were running the random-walk analyser. Added the
+detector and sampling scaling sections that were missing from the record. Corrected two
+overclaims in the text: seed 295 is an unlucky finite-sample trajectory rather than a different
+physical process, and the swap result is an interaction between spectrum and orientation rather
+than eigenvalues being irrelevant.
+ 
+---
+ 
+## 23/07/2026 (Thu) - Shrink validation: coverage and tau
+ 
+**Did:** Checked whether the tighter intervals are honest. On 1,000 healthy seeds, shrink coverage
+is 57.4/76.0/98.0 against the untreated fit's 57.8/75.0/97.8, so calibration is preserved rather
+than degraded - kinisi is already slightly conservative here and shrink inherits that. Median
+interval width on healthy data 0.0345 against 0.0343 untreated, so it barely touches
+well-conditioned matrices. Tau is flat over a hundred-fold range, which means it is a default
+rather than a tuned parameter.
+ 
+---
+ 
+## 22/07/2026 (Wed) - Variance-level repair
+ 
+**Did:** Repaired the variance vector the covariance is built from rather than the matrix.
+Parametric reconstruction and precision weighted shrinkage both recover 14/14 with clean
+controls, median D 0.993 and 0.990 against the floor's 0.850, and d_std 0.0335 and 0.0378
+against 0.0845. Spectral continuation disqualified, controls to zero, which is the third
+construction to fail by attaching small eigenvalues to empirical directions. Seed 295 recovers
+under shrink but not the floor, so the disagreement may serve as a flag for tension with the
+diffusive model.
+ 
+---
+ 
+## 21/07/2026 (Tue) - Single-eigenvector swap
+ 
+**Did:** Replaced only the most-negative eigenvector with its model counterpart, keeping every
+eigenvalue and the other 125 vectors. All 14 recover, 0.66 to 0.98, median 0.88, controls
+unchanged, so the failure localises to a single corrupted direction. The negatives-only value
+swap fails its controls exactly as the full-spectrum version did.
+ 
+---
+ 
+## 20/07/2026 (Mon) - Eigen-swap causal test
+ 
+**Did:** Swapped eigen-components between the empirical and analytical covariance, with healthy
+seeds as controls. Model eigenvalues on empirical eigenvectors fails its own controls, all four
+to zero, from a roughly 1e6 rank-paired scale mismatch that a global rescale does not fix.
+Empirical eigenvalues on model eigenvectors recovers all 14 with controls untouched, while the
+matrices remain indefinite.
+ 
+---
+ 
+## 17/07/2026 (Fri) - Alignment null and IPR severity
+ 
+**Did:** Tested whether the damaged directions point along the slope. Hold-one-size-out gives 0%
+sensitivity in three folds of four, and the numerator-only control shows pure alignment carries
+no signal - the full statistic only clusters because dividing by the eigenvalue reimports it.
+IPR against severity rho +0.758, partial +0.693 controlling the smallest eigenvalue while the
+reverse collapses to +0.043, and +0.849 controlling system size. Healthy IPR overlaps the
+anomalies entirely, so it explains severity rather than occurrence.
+ 
+---
+ 
+## 16/07/2026 (Thu) - MSD plots for Andrew, damage location
+ 
+**Did:** Plotted MSD with error bars for seed 295 and for all 14 anomalies, plus log-log against
+a slope-one reference. Answered what D means in the plot titles and what the dashed line is.
+Fingerprinted where the damage sits: centre of mass around 0.83 along the lag axis, but negative
+counts spanning 1 to 31, so the amount of damage does not decide whether a matrix fails.
+ 
+---
+ 
+## 15/07/2026 (Wed) - Data verification and consolidation
+ 
+**Did:** Verified every data file and consolidated `~/data` to a symlink of the repo data
+directory, archiving the broken fragments. Established that the data loss was a two-directory
+path confusion rather than destruction: the intact 64,000 population survived in the repo copy
+and identifies the same 14 anomalies as the regeneration, which makes that an unintended
+replication.
+ 
+---
+ 
+## 14/07/2026 (Tue) - c-sweep and the behavioural detector
+ 
+**Did:** Swept the floor coefficient on the real fit: recovery flat from 0.05 to 2.0 while d_std
+grows with c, so c=0.25 is the smallest value with full recovery and near-minimal width. Found a
+detector that does not use the covariance at all - the ratio of the untreated Bayesian estimate
+to the OLS slope, on 400 healthy seeds. Healthy median 1.009 min 0.623 against anomaly max 0.604,
+100% sensitivity at threshold 0.7 for 1.5% false alarms, holding under one-size-out. Killed the
+slogdet warning as a detector since it fires on 400 of 400 healthy fits.
+ 
+---
+ 
+## 13/07/2026 (Mon) - Regeneration and 14/14 validation
+ 
+**Did:** Regenerated the population with a save guard after the overwrite, reproducing the same
+14 anomalies exactly. Validated the floor on all 14 through the real Bayesian fit: every
+untreated fit fails at every system size, adaptive recovers 14/14 with median 0.85, mineig
+comparable. Seed 295 recovers only partially at 0.579, which is correct given its MSD is poorly
+described by a straight line over the fitting window.
+ 
+---
+ 
+## 10/07/2026 (Fri) - 64,000-fit population complete
+ 
+**Did:** Population scan finished across 16, 24, 32 and 48 atoms: 14 anomalies, about 0.02%,
+split 5/2/3/4. First real-fit harness runs on the known seeds. Found the anomaly checkpoint had
+been poisoned by rows recording a NameError, which made the resume logic skip a seed permanently.
+ 
+---
+ 
+## 09/07/2026 (Thu) - Population scan started
+ 
+**Did:** Started the four-size population scan. Only a partial chunk written by the end of the
+day, which is the copy that later looked like data loss.
+ 
+ 
 
 ## 08/07/2026 (Wed) - Full notebook review + README
 
