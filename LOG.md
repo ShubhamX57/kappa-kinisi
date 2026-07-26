@@ -17,7 +17,7 @@ than eigenvalues being irrelevant.
  
 **Did:** Checked whether the tighter intervals are honest. On 1,000 healthy seeds, shrink coverage
 is 57.4/76.0/98.0 against the untreated fit's 57.8/75.0/97.8, so calibration is preserved rather
-than degraded - kinisi is already slightly conservative here and shrink inherits that. Median
+than degraded, kinisi is already slightly conservative here and shrink inherits that. Median
 interval width on healthy data 0.0345 against 0.0343 untreated, so it barely touches
 well-conditioned matrices. Tau is flat over a hundred-fold range, which means it is a default
 rather than a tuned parameter.
