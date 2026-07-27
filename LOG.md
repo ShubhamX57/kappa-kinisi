@@ -4,7 +4,7 @@
  
 **Did:** Rebuilt the analysis notebook with lowercase variables, docstrings and plain prose,
 leaving checkpoint dict keys alone since they are written to disk. Fixed three latent bugs:
-`realfit_with_treatment` defined after the cell that calls it, a duplicate MSD cell drawing onto
+realfit_with_treatment defined after the cell that calls it, a duplicate MSD cell drawing onto
 stale axes, and two cells labelled LiPS that were running the random-walk analyser. Added the
 detector and sampling scaling sections that were missing from the record. Corrected two
 overclaims in the text: seed 295 is an unlucky finite-sample trajectory rather than a different
