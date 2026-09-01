@@ -1,7 +1,5 @@
 # Project log : kappa-kinisi
 
-## All log from 24/07 to 26/08 are stored in local machine. which will get updated onces remote branch conflict are resolved.
-
 ## 24/07/2026 (Fri) - Notebook restyled and finalised 
  
 **Did:** Rebuilt the analysis notebook with lowercase variables, docstrings and plain prose,
