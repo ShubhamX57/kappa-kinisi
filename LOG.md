@@ -1,6 +1,6 @@
 # Project log : kappa-kinisi
 
-## 24/07/2026 (Fri) - Notebook restyled and finalised 
+## 24/07/2026 (Fri)  Notebook restyled and finalised 
  
 **Did:** Rebuilt the analysis notebook with lowercase variables, docstrings and plain prose,
 leaving checkpoint dict keys alone since they are written to disk. Fixed three latent bugs:
