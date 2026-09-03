@@ -37,6 +37,7 @@ Usage
 """
 
 
+
 import os
 import numpy as np
 import scipp as sc
@@ -45,6 +46,7 @@ from MDAnalysis.coordinates.memory import MemoryReader
 from kinisi.analyze import DiffusionAnalyzer
 from pathlib import Path
 from tqdm import tqdm
+
 
 base = Path.home()
 
@@ -60,6 +62,8 @@ def walk(atoms, timesteps, jump_size, seed):
     identifiable at all.
 
     """
+
+
     possible_moves = np.zeros((6, 3))
     j = 0
     for i in range(0, 6, 2):
@@ -74,12 +78,14 @@ def walk(atoms, timesteps, jump_size, seed):
 
 
 
+
 def build_analyzer(seed, atoms=128, length=128):
     """
     Construct a fitted DiffusionAnalyzer for one seed.
 
     The fit is performed here rather than by the caller because a.diff does not
     exist until diffusion() has been called.
+
     """
     rng = np.random.RandomState(seed)
     steps = walk(atoms, length, np.sqrt(6), rng)
@@ -135,13 +141,13 @@ def model_variance_S15(a, kappa=np.sqrt(6), dim=3):
     Derived for free diffusion and exact for the lattice walk used here. It
     describes a simple walk to within 2.6 per cent and departs by 38 per cent
     under ballistic motion.
-
     """
     da = a.diff.dg['da']
     n_samples = da.coords['n_samples'].values
     n_steps = da.coords['time interval'].values
     regime = a.diff.diff_regime
     return (2 * n_steps[regime:]**2 * kappa**4) / (dim * n_samples[regime:])
+
 
 
 
@@ -177,27 +183,19 @@ def realfit_with_treatment(seed, treatment_fn, atoms=32, start=2.0):
     Injected by monkey-patching because bayesian_regression recomputes the
     covariance internally: a matrix supplied by any other route is silently
     discarded and the test measures nothing.
-
     """
     a = build_analyzer(seed, atoms=atoms)
-
     raw = build_raw_cov(a)
-
     treated = treatment_fn(raw)
-
     template = a.diff.compute_covariance_matrix()
-
     treated_var = sc.array(dims=template.dims, values=treated, unit=template.unit)
-
     original = a.diff.compute_covariance_matrix
-
     # bayesian_regression recomputes the covariance internally, so the treated
     # matrix must replace the method rather than be passed as an argument.
     # Without this the fit proceeds on the original and the test measures
     # nothing while appearing to succeed.
 
     a.diff.compute_covariance_matrix = lambda: treated_var
-
     try:
         a.diff.bayesian_regression(start * sc.Unit('s'), progress=False)
         D_post = a.diff.gradient.values / (2 * 3)
@@ -210,11 +208,8 @@ true_spec = {}
 
 for ac in [16, 24, 32, 48]:
     a0 = build_analyzer(0, atoms=ac)
-
     S15 = cov_from_variance_S30(a0, model_variance_S15(a0))
-
     true_spec[ac] = np.sort(np.linalg.eigvalsh(S15))
-
 
 
 
@@ -227,8 +222,8 @@ def surgical_evec_swap(m, U_model_lmin):
     since replacing one column destroys orthogonality
     the healthy controls
     establish that the QR step is not what produces the recovery.
+
     """
-    
     # eigh, not eig: the matrix is symmetric by construction, so the
     # eigenvalues are real and returned in ascending order
 
@@ -238,13 +233,14 @@ def surgical_evec_swap(m, U_model_lmin):
     u_new = U_model_lmin
     if np.dot(V[:, 0], u_new) < 0:
         u_new = -u_new
+
     V2 = V.copy()
+
     V2[:, 0] = u_new
 
     # replacing one column destroys orthogonality, so the basis is restored.
     # The healthy controls establish that this step is not what produces the
     # recovery: were it responsible, they would move too, and they do not.
-
     q, _ = np.linalg.qr(V2)
 
     signs = np.sign(np.sum(q * V2, axis=0))
@@ -265,19 +261,14 @@ def negatives_only_value_swap(m, lam_true):
     works: it reduces the healthy controls to zero, since healthy matrices carry
     negative eigenvalues of their own.
     """
-
     # eigh, not eig: the matrix is symmetric by construction, so the
     # eigenvalues are real and returned in ascending order
     w, V = np.linalg.eigh(m)
-
     neg = w < 0
-
     if not neg.any():
         return m
     w2 = w.copy()
-
     w2[neg] = lam_true[neg]
-
     return (V * w2) @ V.T
 
 
@@ -296,6 +287,8 @@ for ac in [16, 24, 32, 48]:
     true_vecs_lmin[ac] = V[:, 0]
 
 
+
+
 bad = [tuple(map(int, b)) for b in np.load(base / "data" / "all_bad_seeds_v2.npy")]
 
 controls = [(16, 0), (24, 0), (32, 0), (48, 0)]
@@ -304,13 +297,13 @@ targets = bad + controls
 
 ckpt = base / "data" / "surgical_swap_test.npy"
 
+
 if os.path.exists(ckpt):
     rows = list(np.load(ckpt, allow_pickle=True))
     done = {(r["atoms"], r["seed"], r["method"]) for r in rows}
     print(f"resuming - {len(rows)} fits done")
 else:
     rows, done = [], set()
-
 
 for atoms, seed in tqdm(targets):
     lam = true_spec[atoms]
@@ -333,23 +326,20 @@ for atoms, seed in tqdm(targets):
         np.save(ckpt, np.array(rows, dtype=object))
 
 
-cols = ["raw", "surgical_evec", "negatives_only_val"]
 
-print(f"\n{'atoms':>5} {'seed':>6} {'raw':>10} {'surgical_evec':>15} {'neg_only_val':>14}")
+
+cols = ["raw", "surgical_evec", "negatives_only_val"]
+print("\natoms   seed        raw   surgical_evec   neg_only_val")
 
 for atoms, seed in targets:
     g = {r["method"]: r for r in rows if r["atoms"] == atoms and r["seed"] == seed}
-
     vals = " ".join(f"{g[c]['d']:14.3f}" if c in g and np.isfinite(g[c]["d"]) else f"{'nan':>14}"
                     for c in cols)
-    
     tag = "CONTROL" if seed == 0 else ""
-
     print(f"{atoms:5d} {seed:6d} {vals}  {tag}")
 
 
 errs = [r for r in rows if "error" in r]
-
 if errs:
     print("\nerrors:")
     for r in errs:
