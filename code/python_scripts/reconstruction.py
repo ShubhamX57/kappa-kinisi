@@ -171,7 +171,9 @@ a_rw = build_analyzer(0, atoms=32)
 compare(a_rw, "random walk, 32 atoms, seed 0")
 
 
-#  lips
+
+
+#  lips data 
 
 lips_path = os.path.join(os.path.dirname(kinisi.__file__), 'tests/inputs/LiPS.exyz')
 
@@ -193,7 +195,7 @@ compare(a_lips, "LiPS")
 
 
 
-#  argyrodite
+#  argyrodite data 
 xd_path = os.path.join(os.path.dirname(kinisi.__file__), 'tests/inputs/example_XDATCAR.gz')
 a_arg = DiffusionAnalyzer.from_xdatcar(
     Xdatcar(xd_path), specie='Li',
