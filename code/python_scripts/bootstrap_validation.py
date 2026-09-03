@@ -23,6 +23,7 @@ Outputs
 
 Usage
     python bootstrap_validation.py
+
 """
 
 
@@ -43,6 +44,7 @@ n_boot = 500
 n_healthy = 1000
 atoms_default = 32
 length = 128
+
 
 
 def walk(atoms, timesteps, jump_size, rng):
@@ -102,21 +104,18 @@ def build_analyzer(seed, atoms=atoms_default):
 
 def raw_pieces(a):
     """
-    Return the variances, sample counts and lag times of the diffusive regime.
+    Return the variances, sample counts and lag times of the diffusive
+    regime.
 
-    These are the 126 measured quantities from which the covariance is generated,
-    and the objects the variance treatments operate upon.
-
+    These are the 126 measured quantities from which the covariance is
+    generated, and the objects upon which the variance treatments operate.
     """
-
 
     da = a.diff.dg['da']
     regime = a.diff.diff_regime
     return (da.data.variances[regime:],
             da.coords['n_samples'].values[regime:],
             da.coords['time interval'].values[regime:])
-
-
 
 
 
@@ -157,7 +156,6 @@ def fit_aprime(var, nprime, nsteps):
 
 
 
-
 def t_shrink(var, nprime, nsteps, tau_factor=1.0):
     """
     Blend each variance toward the analytical form by its sample count.
@@ -166,14 +164,13 @@ def t_shrink(var, nprime, nsteps, tau_factor=1.0):
     samples passes through essentially unaltered while one supported by a few
     dozen is drawn most of the way toward the model. No threshold is applied
     and nothing is discarded: the sampling decides.
-  
+
     """
     ah = fit_aprime(var, nprime, nsteps)
     model = ah * nsteps ** 2 / nprime
     tau = tau_factor * float(np.median(nprime[len(nprime) // 2:]))
     w = nprime / (nprime + tau)
     return cov_from_var(w * var + (1 - w) * model, nprime)
-
 
 
 
@@ -189,6 +186,9 @@ def per_atom_msd(positions, lag_steps):
         d = positions[:, n:, :] - positions[:, :-n, :]
         out[:, k] = np.mean(np.sum(d ** 2, axis=2), axis=1)
     return out
+
+
+
 
 
 def bootstrap_cov(seed, atoms, lag_steps, n_boot=n_boot):
@@ -214,6 +214,9 @@ def bootstrap_cov(seed, atoms, lag_steps, n_boot=n_boot):
     return np.cov(reps, rowvar=False)
 
 
+
+
+
 def realfit_with_cov(a, treated, start=2.0):
     """
     Refit a case with a treated covariance, through the genuine pipeline.
@@ -224,27 +227,21 @@ def realfit_with_cov(a, treated, start=2.0):
 
     """
     template = a.diff.compute_covariance_matrix()
-
     treated_var = sc.array(dims=template.dims, values=treated, unit=template.unit)
-    
     original = a.diff.compute_covariance_matrix
+
     # bayesian_regression recomputes the covariance internally, so the treated
     # matrix must replace the method rather than be passed as an argument.
     # Without this the fit proceeds on the original and the test measures
     # nothing while appearing to succeed.
 
-
     a.diff.compute_covariance_matrix = lambda: treated_var
     try:
         a.diff.bayesian_regression(start * sc.Unit('s'), progress=False)
-
         post = a.diff.gradient.values / (2 * 3)
-
     finally:
         a.diff.compute_covariance_matrix = original
     return post
-
-
 
 
 
@@ -263,7 +260,6 @@ def cover(post, levels=(50, 68, 95)):
         lo, hi = np.percentile(post, [(100 - q) / 2, 100 - (100 - q) / 2])
         out[q] = bool(lo <= 1.0 <= hi)
     return out
-
 
 
 
@@ -289,18 +285,16 @@ def spectrum_report(cov):
 
 
 
-
-
 #  part A: the 14
-
 bad14 = [tuple(map(int, b)) for b in np.load(base / "data" / "all_bad_seeds_v2.npy")]
 
 controls = [(16, 0), (24, 0), (32, 0), (48, 0)]
 
 targets = bad14 + controls
 
-
 ckpt_a = base / "data" / "bootstrap_anomalies.npy"
+
+
 
 if os.path.exists(ckpt_a):
     rows_a = list(np.load(ckpt_a, allow_pickle=True))
@@ -311,8 +305,6 @@ else:
 
 
 print("[A] bootstrap vs raw vs shrink on the 14 anomalies + 4 controls")
-
-
 for atoms, seed in tqdm(targets):
     a = None
     for name in ("raw", "shrink", "bootstrap"):
@@ -344,12 +336,14 @@ for atoms, seed in tqdm(targets):
                            "error": f"{type(e).__name__}: {e}"})
         np.save(ckpt_a, np.array(rows_a, dtype=object))
 
+
+
+
 print("\n[A] recovered D (true = 1)")
 
 names = ["raw", "shrink", "bootstrap"]
 
-print(f"{'atoms':>5} {'seed':>6} " + " ".join(f"{n:>11}" for n in names))
-
+print("atoms   seed " + " ".join(f"{n:>11}" for n in names))
 
 for atoms, seed in targets:
     g = {r["method"]: r for r in rows_a if r["atoms"] == atoms and r["seed"] == seed}
@@ -358,9 +352,10 @@ for atoms, seed in targets:
     tag = "CONTROL" if seed == 0 else ""
     print(f"{atoms:5d} {seed:6d} {vals}  {tag}")
 
+
 print("\n[A] bootstrap spectrum (is it really PD?)")
 
-print(f"{'atoms':>5} {'seed':>6} {'lmin_rel':>12} {'n_neg':>7} {'real_neg':>9} {'rank':>6}")
+print("atoms   seed     lmin_rel   n_neg  real_neg   rank")
 
 for atoms, seed in targets:
     g = [r for r in rows_a if r["atoms"] == atoms and r["seed"] == seed
@@ -375,7 +370,12 @@ for atoms, seed in targets:
 
 
 
+
+
+
+
 #  part B: coverage, 1000 healthy
+
 bad32 = {295, 14460, 15770}
 
 seeds = [s for s in range(1200) if s not in bad32][:n_healthy]
@@ -390,11 +390,12 @@ else:
     rows_b, done_b = [], set()
 
 
+
 print(f"\n[B] coverage on {n_healthy} healthy 32-atom seeds x (raw, shrink, bootstrap)")
+
 
 for s in tqdm(seeds):
     a = None
-
     for name in ("raw", "shrink", "bootstrap"):
         if (s, name) in done_b:
             continue
@@ -402,7 +403,6 @@ for s in tqdm(seeds):
             a = build_analyzer(s, atoms=atoms_default)
             var, nprime, nsteps = raw_pieces(a)
             lag_steps = nsteps.astype(int)
-
 
         if name == "raw":
             treated = cov_from_var(var, nprime)
@@ -425,11 +425,11 @@ for s in tqdm(seeds):
 
 
 
-print("\n[B] RESULTS - coverage on healthy seeds (nominal 50 / 68 / 95)")
+
+print("\n[B] Results - coverage on healthy seeds (nominal 50 / 68 / 95)")
 
 for name in ("raw", "shrink", "bootstrap"):
     g = [r for r in rows_b if r["method"] == name and np.isfinite(r.get("d", np.nan))]
-
     if not g:
         continue
     d = np.array([r["d"] for r in g])
@@ -437,26 +437,27 @@ for name in ("raw", "shrink", "bootstrap"):
     c50 = np.mean([r["c50"] for r in g])
     c68 = np.mean([r["c68"] for r in g])
     c95 = np.mean([r["c95"] for r in g])
-
+    cov = f"{100 * c50:.1f} / {100 * c68:.1f} / {100 * c95:.1f}"
     print(f"  {name:10s} n={len(g):4d}  median D {np.median(d):.4f}  "
-          f"median d_std {np.median(sd):.4f}  "
-          f"coverage {100 * c50:.1f} / {100 * c68:.1f} / {100 * c95:.1f}")
+          f"median d_std {np.median(sd):.4f}  coverage {cov}")
+
 
 
 print("\n[B] summary over the 14 anomalies")
-
 badset = set(bad14)
-
 for name in ("raw", "shrink", "bootstrap"):
     d = np.array([r["d"] for r in rows_a if r["method"] == name
                   and (r["atoms"], r["seed"]) in badset and np.isfinite(r["d"])])
     sd = np.array([r["d_std"] for r in rows_a if r["method"] == name
                    and (r["atoms"], r["seed"]) in badset and np.isfinite(r["d_std"])])
     rec = np.mean((d > 0.5) & (d < 2.0)) if d.size else np.nan
+    print(
+        f"  {
+            name:10s} median D {
+            np.median(d):6.3f}  median d_std {
+                np.median(sd):7.4f}  recovered {
+                    rec:4.0%}")
 
-
-    print(f"  {name:10s} median D {np.median(d):6.3f}  median d_std {np.median(sd):7.4f}"
-          f"  recovered {rec:4.0%}")
 
 
 errs = [r for r in rows_a + rows_b if "error" in r]
