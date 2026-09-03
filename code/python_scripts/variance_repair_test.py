@@ -39,6 +39,7 @@ from tqdm import tqdm
 base = Path.home()
 
 
+
 def walk(atoms, timesteps, jump_size, seed):
     """
     A three-dimensional lattice random walk.
@@ -47,7 +48,6 @@ def walk(atoms, timesteps, jump_size, seed):
     timestep. With a jump of sqrt(6) the true diffusion coefficient is exactly
     unity, since D = kappa^2 / (2d), which is what makes a failed fit
     identifiable at all.
-
     """
     possible_moves = np.zeros((6, 3))
     j = 0
@@ -62,36 +62,28 @@ def walk(atoms, timesteps, jump_size, seed):
 
 
 
-
 def build_analyzer(seed, atoms=128, length=128):
     """
     Construct a fitted DiffusionAnalyzer for one seed.
 
     The fit is performed here rather than by the caller because a.diff does not
     exist until diffusion() has been called.
-
     """
     rng = np.random.RandomState(seed)
-
     steps = walk(atoms, length, np.sqrt(6), rng)
-
     dims = np.tile([200.0, 200.0, 200.0, 90.0, 90.0, 90.0], (steps.shape[1], 1))
-
     u = mda.Universe.empty(steps.shape[0], trajectory=True)
-
     u.add_TopologyAttr('name', [f'Atom{k}' for k in range(steps.shape[0])])
-
     u.add_TopologyAttr('type', ['A'] * steps.shape[0])
-
     u.trajectory = MemoryReader(np.transpose(steps, (1, 0, 2)), dimensions=dims, delta=1.0)
-
     a = DiffusionAnalyzer.from_universe(u, time_step=1.0 * sc.Unit('s'), step_skip=1,
                                         distance_unit=sc.Unit('m'), specie='A',
                                         dt=sc.linspace(dim='time interval', start=2 * sc.Unit('s'),
                                         stop=length * sc.Unit('s'), num=126), progress=False)
     a.diffusion(2 * sc.Unit('s'), progress=False)
-
     return a
+
+
 
 
 def raw_pieces(a):
@@ -100,20 +92,13 @@ def raw_pieces(a):
 
     These are the 126 measured quantities from which the covariance is generated,
     and the objects the variance treatments operate upon.
-
     """
     da = a.diff.dg['da']
-
     regime = a.diff.diff_regime
-
     var = da.data.variances[regime:]
-
     nprime = da.coords['n_samples'].values[regime:]
-
     nsteps = da.coords['time interval'].values[regime:]
-
     return var, nprime, nsteps
-
 
 
 
@@ -124,20 +109,14 @@ def cov_from_var(var, nprime):
 
     Applies the generating formula: entry (i, j) is the variance at the shorter
     lag scaled by the ratio of the two sample counts.
-
     """
-
     n = var.size
-
     cov = np.zeros((n, n))
-
     for i in range(n):
         for j in range(i, n):
             cov[i, j] = (nprime[i] / nprime[j]) * var[i]
             cov[j, i] = cov[i, j]
     return cov
-
-
 
 
 
@@ -151,12 +130,9 @@ def adaptive_floor(m, c=0.25):
     small because the data genuinely varies little in that direction, and alters
     both alike. The coefficient is justified in realfit_c_sweep.py.
     """
-
     # eigh, not eig: the matrix is symmetric by construction, so the
     # eigenvalues are real and returned in ascending order
-
     v, V = np.linalg.eigh(m)
-
     if v[0] < 0:
         fl = c * (-v[0])
         v = np.where(v < fl, fl, v)
@@ -180,7 +156,6 @@ def fit_aprime(var, nprime, nsteps):
 
 
 
-
 def t_parametric(var, nprime, nsteps):
     """
     Rebuild the entire profile from the analytical form.
@@ -193,8 +168,6 @@ def t_parametric(var, nprime, nsteps):
     return cov_from_var(ah * nsteps**2 / nprime, nprime)
 
 
-
-
 def t_shrink(var, nprime, nsteps):
     """
     Blend each variance toward the analytical form by its sample count.
@@ -203,7 +176,6 @@ def t_shrink(var, nprime, nsteps):
     through essentially unaltered, one from a few dozen is drawn most of the way
     to the model. No threshold, nothing discarded
     the sampling decides.
-
     """
     ah = fit_aprime(var, nprime, nsteps)
     model = ah * nsteps**2 / nprime
@@ -223,7 +195,6 @@ def t_spectral_continuation(m):
     here to fail that way
     each assigns small eigenvalues to empirically
     determined directions.
-
     """
     # eigh, not eig: the matrix is symmetric by construction, so the
     # eigenvalues are real and returned in ascending order
@@ -243,25 +214,18 @@ def t_spectral_continuation(m):
 
 
 
-
 def realfit_with_cov(seed, cov_fn, atoms=32, start=2.0):
     """
     Refit with a treated covariance, through the genuine pipeline.
 
     Injected by monkey-patching because bayesian_regression recomputes the
     covariance internally and would otherwise discard it.
-
     """
     a = build_analyzer(seed, atoms=atoms)
-
     var, nprime, nsteps = raw_pieces(a)
-
     treated = cov_fn(var, nprime, nsteps)
-
     template = a.diff.compute_covariance_matrix()
-
     treated_var = sc.array(dims=template.dims, values=treated, unit=template.unit)
-
     original = a.diff.compute_covariance_matrix
 
     # bayesian_regression recomputes the covariance internally, so the treated
@@ -270,7 +234,6 @@ def realfit_with_cov(seed, cov_fn, atoms=32, start=2.0):
     # nothing while appearing to succeed.
 
     a.diff.compute_covariance_matrix = lambda: treated_var
-
     try:
         a.diff.bayesian_regression(start * sc.Unit('s'), progress=False)
         D_post = a.diff.gradient.values / (2 * 3)
@@ -279,10 +242,9 @@ def realfit_with_cov(seed, cov_fn, atoms=32, start=2.0):
     return D_post
 
 
+
 bad = [tuple(map(int, b)) for b in np.load(base / "data" / "all_bad_seeds_v2.npy")]
-
 controls = [(16, 0), (24, 0), (32, 0), (48, 0)]
-
 targets = bad + controls
 
 
@@ -295,7 +257,6 @@ treatments = [
 ]
 
 
-
 ckpt = base / "data" / "variance_repair_test.npy"
 
 if os.path.exists(ckpt):
@@ -304,7 +265,6 @@ if os.path.exists(ckpt):
     print(f"resuming - {len(rows)} fits done")
 else:
     rows, done = [], set()
-
 
 
 for atoms, seed in tqdm(targets):
@@ -320,13 +280,13 @@ for atoms, seed in tqdm(targets):
                          "d": np.nan, "d_std": np.nan, "error": f"{type(e).__name__}: {e}"})
         np.save(ckpt, np.array(rows, dtype=object))
 
-
-
 names = [t[0] for t in treatments]
+
+
 
 print("\nrecovered D (true = 1)")
 
-print(f"{'atoms':>5} {'seed':>6} " + " ".join(f"{n:>11}" for n in names))
+print("atoms   seed " + " ".join(f"{n:>11}" for n in names))
 
 for atoms, seed in targets:
     g = {r["method"]: r for r in rows if r["atoms"] == atoms and r["seed"] == seed}
@@ -334,6 +294,8 @@ for atoms, seed in targets:
                     for n in names)
     tag = "CONTROL" if seed == 0 else ""
     print(f"{atoms:5d} {seed:6d} {vals}  {tag}")
+
+
 
 
 print("\nmedian d_std (interval width; smaller = tighter honest intervals)")
@@ -344,16 +306,15 @@ for n in names:
     d = np.array([r["d"] for r in rows if r["method"] == n and np.isfinite(r["d"])
                   and (r["atoms"], r["seed"]) in set(bad)])
     rec = np.mean((d > 0.5) & (d < 2.0)) if d.size else np.nan
-    print(
-        f"  {
-            n:11s} median D {
-            np.median(d):6.3f}   median d_std {
-                np.median(s):7.4f}   recovered {
-                    rec:4.0%}")
+    print(f"  {n:<11s} "
+          f"median D {np.median(d):6.3f}   "
+          f"median d_std {np.median(s):7.4f}   "
+          f"recovered {rec:4.0%}"
+    )
+
 
 
 errs = [r for r in rows if "error" in r]
-
 if errs:
     print("\nerrors:")
     for r in errs:
