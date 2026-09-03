@@ -29,8 +29,9 @@ Cost
 
 Usage
     python regenerate_population_v2.py
-   
+
 """
+
 
 
 import os
@@ -43,7 +44,9 @@ from pathlib import Path
 from joblib import Parallel, delayed
 
 
+
 base = Path.home()
+
 
 
 atom_counts = [16, 24, 48]
@@ -52,9 +55,11 @@ n_jobs = -1
 chunk = 2000
 
 
+
 ckpt_pop = base / "data" / "failure_population_v2.npy"
 old_32 = base / "data" / "rw_32atoms_16k.npy"
 bad_out = base / "data" / "all_bad_seeds_v2.npy"
+
 
 
 def walk(atoms, timesteps, jump_size, seed):
@@ -65,23 +70,17 @@ def walk(atoms, timesteps, jump_size, seed):
     timestep. With a jump of sqrt(6) the true diffusion coefficient is exactly
     unity, since D = kappa^2 / (2d), which is what makes a failed fit
     identifiable at all.
-
     """
-
     possible_moves = np.zeros((6, 3))
-
     j = 0
-
     for i in range(0, 6, 2):
         possible_moves[i, j] = jump_size
         possible_moves[i + 1, j] = -jump_size
         j += 1
-
     choices = seed.choice(6, size=(atoms, timesteps))
-
     steps = possible_moves[choices]
-
     return np.cumsum(steps, axis=1)
+
 
 
 
@@ -92,32 +91,20 @@ def build_analyzer(seed, atoms=128, length=128):
 
     The fit is performed here rather than by the caller because a.diff does not
     exist until diffusion() has been called.
-
     """
-
     rng = np.random.RandomState(seed)
-
     steps = walk(atoms, length, np.sqrt(6), rng)
-
     dims = np.tile([200.0, 200.0, 200.0, 90.0, 90.0, 90.0], (steps.shape[1], 1))
-
     u = mda.Universe.empty(steps.shape[0], trajectory=True)
-
     u.add_TopologyAttr('name', [f'Atom{k}' for k in range(steps.shape[0])])
-
     u.add_TopologyAttr('type', ['A'] * steps.shape[0])
-
     u.trajectory = MemoryReader(np.transpose(steps, (1, 0, 2)), dimensions=dims, delta=1.0)
-
     a = DiffusionAnalyzer.from_universe(u, time_step=1.0 * sc.Unit('s'), step_skip=1,
                                         distance_unit=sc.Unit('m'), specie='A',
                                         dt=sc.linspace(dim='time interval', start=2 * sc.Unit('s'),
                                         stop=length * sc.Unit('s'), num=126), progress=False)
-    
     a.diffusion(2 * sc.Unit('s'), progress=False)
-
     return a
-
 
 
 
@@ -130,31 +117,21 @@ def build_raw_cov(a):
     kinisi retains only the matrix that remains after its reconditioning, so the
     matrix that caused the failure must be rebuilt from the stored variances.
     Verified against the stored construction in reconstruction.py.
-
     """
     da = a.diff.dg['da']
-
     variances = da.data.variances
-
     n_samples = da.coords['n_samples'].values
-
     n = variances.size
-
     cov = np.zeros((n, n))
-
     for i in range(n):
         for j in range(i, n):
             ratio = n_samples[i] / n_samples[j]
             cov[i, j] = ratio * variances[i]
             cov[j, i] = cov[i, j]
-
     regime = a.diff.diff_regime
-
     # sliced to the diffusive regime: kinisi fits only beyond diff_regime, and
     # the lag times before it are present in the arrays but unused
-
     return cov[regime:, regime:]
-
 
 
 
@@ -166,7 +143,6 @@ def model_variance_S15(a, kappa=np.sqrt(6), dim=3):
     Derived for free diffusion and exact for the lattice walk used here. It
     describes a simple walk to within 2.6 per cent and departs by 38 per cent
     under ballistic motion.
-
     """
     da = a.diff.dg['da']
     n_samples = da.coords['n_samples'].values
@@ -179,13 +155,13 @@ def model_variance_S15(a, kappa=np.sqrt(6), dim=3):
 
 
 
+
 def cov_from_variance_S30(a, sigma2):
     """
     Assemble the covariance from a variance profile.
 
     Applies the generating formula: entry (i, j) is the variance at the shorter
     lag scaled by the ratio of the two sample counts.
-
     """
     da = a.diff.dg['da']
     n_samples = da.coords['n_samples'].values
@@ -203,26 +179,20 @@ def cov_from_variance_S30(a, sigma2):
 
 
 
-
 def main():
     """
-    
     Run the population, checkpointing as it goes.
 
     Work is distributed with joblib and written every 2,000 seeds so an
     interrupted run resumes rather than restarts. It aborts after twenty
     consecutive failures, since an environment fault would otherwise fill the
     record with missing values.
-
     """
-
-
     true_ev = {}
     for ac in atom_counts:
         a0 = build_analyzer(0, atoms=ac)
         s2 = model_variance_S15(a0)
         true_ev[ac] = np.sort(np.linalg.eigvalsh(cov_from_variance_S30(a0, s2)))[::-1]
-
 
     def fit_one(ac, s):
         """
@@ -230,7 +200,6 @@ def main():
 
         Records the diffusion coefficient alongside every candidate diagnostic, so
         the population need not be regenerated when a new one is proposed.
-
         """
         try:
             a = build_analyzer(s, atoms=ac)
@@ -252,17 +221,16 @@ def main():
 
 
 
+
     test = fit_one(16, 0)
-
     assert np.isfinite(test["D"]), f"pre-flight FAILED: {test.get('error')}"
-
     print(f"pre-flight OK: 16-atom seed 0 D={test['D']:.1f}")
+
 
 
     if os.path.exists(ckpt_pop):
         records = list(np.load(ckpt_pop, allow_pickle=True))
         print(f"resuming - {len(records)} records in {ckpt_pop.name}")
-
     else:
         records = []
         if os.path.exists(old_32):
@@ -279,13 +247,10 @@ def main():
 
 
 
+
     done = {(r["atoms"], r["seed"]) for r in records}
-
     jobs = [(ac, s) for ac in atom_counts for s in range(n_seeds) if (ac, s) not in done]
-
     print(f"running {len(jobs)} fits across {n_jobs if n_jobs > 0 else os.cpu_count()} cores...\n")
-
-
 
 
 
@@ -297,9 +262,11 @@ def main():
         np.save(ckpt_pop, np.array(records, dtype=object))
         print(f"  checkpoint: {len(records)} done")
 
+
+
+
     np.save(ckpt_pop, np.array(records, dtype=object))
     print(f"\ndone: {len(records)} total fits")
-
 
 
 
@@ -316,30 +283,29 @@ def main():
 
 
     print(f"\ntotal fits: {len(records)}")
-
     print(f"total anomalies: {int(anom.sum())}\n")
-
-
     for ac in np.unique(atoms_arr):
         m = atoms_arr == ac
-        print(f"  {ac:3d} atoms: {int((anom & m).sum()):3d} anomalies / {int(m.sum())} "
-              f"({100 * np.mean(anom[m]):.3f}%)")
+        print(
+            f"  {ac:3d} atoms: {int((anom & m).sum()):3d} anomalies / {int(m.sum())} ({100 * np.mean(anom[m]):.3f}%)")
+
 
 
     bad = [(int(records[i]["atoms"]), int(records[i]["seed"])) for i in np.where(anom)[0]]
-
     print(f"\nbad list: {bad}")
 
 
-    sizes_ok = all(int((atoms_arr == ac).sum()) >= n_seeds for ac in [16, 24, 32, 48])
 
+    sizes_ok = all(int((atoms_arr == ac).sum()) >= n_seeds for ac in [16, 24, 32, 48])
     if len(records) >= 60000 and sizes_ok:
         np.save(bad_out, np.array(bad))
         print(f"\nsaved {len(bad)} pairs to {bad_out.name}")
     else:
-        print(f"\nGUARD: NOT saving {bad_out.name} - population incomplete "
-              f"({len(records)} records; all four sizes >= {n_seeds} required)")
-
+       print(
+           f"\nGUARD: NOT saving {bad_out.name} - "
+           f"population incomplete ({len(records)} records; "
+           f"all four sizes >= {n_seeds} required)"
+      )
 
 
 
