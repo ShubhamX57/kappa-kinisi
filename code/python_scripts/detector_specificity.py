@@ -25,8 +25,8 @@ Outputs
 
 Usage
     python detector_specificity.py
-"""
 
+"""
 
 
 import os
@@ -40,7 +40,10 @@ from pathlib import Path
 from tqdm import tqdm
 from scipy.stats import linregress
 
+
+
 base = Path.home()
+
 
 n_healthy_per_size = 100
 sizes = [16, 24, 32, 48]
@@ -56,7 +59,6 @@ def walk(atoms, timesteps, jump_size, seed):
     timestep. With a jump of sqrt(6) the true diffusion coefficient is exactly
     unity, since D = kappa^2 / (2d), which is what makes a failed fit
     identifiable at all.
-
     """
     possible_moves = np.zeros((6, 3))
     j = 0
@@ -96,7 +98,6 @@ def build_analyzer(seed, atoms=128, length=128):
 
 
 
-
 def build_raw_cov(a):
     """
     Reconstruct the covariance as it stood before treatment.
@@ -124,27 +125,24 @@ def build_raw_cov(a):
 
 
 
-
 def rawfit_with_warnflag(a, start=2.0):
-    """Fit and record whether numpy issued a warning during the inversion.
+    """
+    Fit and record whether numpy issued a warning during the inversion.
 
     The slogdet warning suggested a diagnostic at no computational cost. It
     fires on all four hundred healthy fits and therefore carries no information.
     """
     raw = build_raw_cov(a)
-
     template = a.diff.compute_covariance_matrix()
-
     raw_var = sc.array(dims=template.dims, values=raw, unit=template.unit)
-
     original = a.diff.compute_covariance_matrix
+
     # bayesian_regression recomputes the covariance internally, so the treated
     # matrix must replace the method rather than be passed as an argument.
     # Without this the fit proceeds on the original and the test measures
     # nothing while appearing to succeed.
 
     a.diff.compute_covariance_matrix = lambda: raw_var
-
     try:
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
@@ -154,7 +152,6 @@ def rawfit_with_warnflag(a, start=2.0):
     finally:
         a.diff.compute_covariance_matrix = original
     return D_post, warned
-
 
 
 
@@ -172,8 +169,8 @@ else:
     rows, done = [], set()
 
 
-jobs = []
 
+jobs = []
 for ac in sizes:
     s = 0
     while sum(1 for j in jobs if j[0] == ac) < n_healthy_per_size:
@@ -213,47 +210,40 @@ warn_h = np.array([bool(r["warned"]) for r in ok])
 
 
 anom = list(np.load(base / "data" / "anomaly_realfit_all14_v2.npy", allow_pickle=True))
-
 araw = {(r["atoms"], r["seed"]): r for r in anom if r["method"] == "raw"}
-
 ratio_a = np.array([r["d_raw"] / r["d_ols"] if "d_raw" in r else r["d"] / r["d_ols"]
                     for r in araw.values()])
 
 
 print(f"\nhealthy fits used: {len(ok)}   anomalies: {len(ratio_a)}")
-
-
-print(f"\nhealthy raw/ols ratio: median {np.median(ratio_h):.3f}, "
-      f"min {ratio_h.min():.3f}, 1st pct {np.percentile(ratio_h, 1):.3f}")
-
-
+print(
+    f"\nhealthy raw/ols ratio: median {
+        np.median(ratio_h):.3f}, min {
+            ratio_h.min():.3f}, 1st pct {
+                np.percentile(
+                    ratio_h,
+                    1):.3f}")
 print(f"anomaly raw/ols ratio: max {ratio_a.max():.3f}\n")
 
-print(f"{'threshold':>10} {'sensitivity':>12} {'false alarms':>13} {'FPR':>7}")
 
 
+print(" threshold  sensitivity  false alarms     FPR")
 for t in thresholds:
     sens = np.mean(ratio_a < t)
     fp = int(np.sum(ratio_h < t))
     print(f"{t:>10} {sens:>11.0%} {fp:>9d}/{len(ratio_h)} {fp / len(ratio_h):>7.1%}")
 
 
-print(f"\nslogdet-warning detector: healthy flagged {int(warn_h.sum())}/{len(warn_h)} "
-      f"({warn_h.mean():.1%})")
-
+print(f"\nslogdet-warning detector: healthy flagged {int(warn_h.sum())}/{len(warn_h)} ({warn_h.mean():.1%})")
 
 per = {}
-
 for r in ok:
     per.setdefault(r["atoms"], []).append(r["d_raw"] / r["d_ols"])
-
 print("\nper-size healthy ratio medians:")
-
-
-
 for ac in sizes:
     v = np.array(per.get(ac, [np.nan]))
     print(f"  {ac:3d} atoms: median {np.median(v):.3f}, min {np.min(v):.3f}")
+
 
 
 
