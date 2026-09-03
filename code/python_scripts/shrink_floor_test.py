@@ -23,6 +23,7 @@ Outputs
 
 Usage
     python shrink_floor_test.py
+
 """
 
 
@@ -49,7 +50,6 @@ def walk(atoms, timesteps, jump_size, rng):
     timestep. With a jump of sqrt(6) the true diffusion coefficient is exactly
     unity, since D = kappa^2 / (2d), which is what makes a failed fit
     identifiable at all.
-
     """
     moves = np.zeros((6, 3))
     axis = 0
@@ -63,7 +63,6 @@ def walk(atoms, timesteps, jump_size, rng):
 
 
 
-
 def build_analyzer(seed, atoms=32):
     """
     Construct a fitted DiffusionAnalyzer for one seed.
@@ -71,28 +70,19 @@ def build_analyzer(seed, atoms=32):
     The fit is performed here rather than by the caller because a.diff does not
     exist until diffusion() has been called.
     """
-
     rng = np.random.RandomState(seed)
-
     steps = walk(atoms, length, np.sqrt(6), rng)
-
     dims = np.tile([200.0, 200.0, 200.0, 90.0, 90.0, 90.0], (steps.shape[1], 1))
-
     u = mda.Universe.empty(steps.shape[0], trajectory=True)
-
     u.add_TopologyAttr('name', [f'Atom{k}' for k in range(steps.shape[0])])
-
     u.add_TopologyAttr('type', ['A'] * steps.shape[0])
-
     u.trajectory = MemoryReader(np.transpose(steps, (1, 0, 2)), dimensions=dims, delta=1.0)
-
     a = DiffusionAnalyzer.from_universe(
         u, time_step=1.0 * sc.Unit('s'), step_skip=1,
         distance_unit=sc.Unit('m'), specie='A',
         dt=sc.linspace(dim='time interval', start=2 * sc.Unit('s'),
                        stop=length * sc.Unit('s'), num=126),
         progress=False)
-    
     a.diffusion(2 * sc.Unit('s'), progress=False)
     return a
 
@@ -107,12 +97,9 @@ def raw_pieces(a):
 
     These are the 126 measured quantities from which the covariance is generated,
     and the objects the variance treatments operate upon.
-
     """
     da = a.diff.dg['da']
-
     regime = a.diff.diff_regime
-
     return (da.data.variances[regime:],
             da.coords['n_samples'].values[regime:],
             da.coords['time interval'].values[regime:])
@@ -128,7 +115,6 @@ def cov_from_var(var, nprime):
 
     Applies the generating formula: entry (i, j) is the variance at the shorter
     lag scaled by the ratio of the two sample counts.
-
     """
     n = var.size
     cov = np.zeros((n, n))
@@ -137,8 +123,6 @@ def cov_from_var(var, nprime):
             cov[i, j] = (nprime[i] / nprime[j]) * var[i]
             cov[j, i] = cov[i, j]
     return cov
-
-
 
 
 
@@ -171,7 +155,6 @@ def fit_aprime(var, nprime, nsteps):
     Weighted by sample count so the well-determined short lags dominate. Fitting
     rather than assuming the amplitude is what allows the treatment to
     generalise to a system whose true diffusion coefficient differs.
-
     """
     g = nsteps ** 2 / nprime
     return float(np.sum(nprime * var * g) / np.sum(nprime * g * g))
@@ -183,6 +166,7 @@ def fit_aprime(var, nprime, nsteps):
 def shrunk_var(var, nprime, nsteps, tau_factor=1.0):
     """
     Blend each variance toward the analytical form by its sample count.
+    
     """
     ah = fit_aprime(var, nprime, nsteps)
     model = ah * nsteps ** 2 / nprime
@@ -204,18 +188,18 @@ def realfit_with_cov(a, treated, start=2.0):
     template = a.diff.compute_covariance_matrix()
     treated_var = sc.array(dims=template.dims, values=treated, unit=template.unit)
     original = a.diff.compute_covariance_matrix
-
     # bayesian_regression recomputes the covariance internally, so the treated
     # matrix must replace the method rather than be passed as an argument.
     # Without this the fit proceeds on the original and the test measures
     # nothing while appearing to succeed.
-
     a.diff.compute_covariance_matrix = lambda: treated_var
     try:
         a.diff.bayesian_regression(start * sc.Unit('s'), progress=False)
         return a.diff.gradient.values / (2 * 3)
     finally:
         a.diff.compute_covariance_matrix = original
+
+
 
 
 
@@ -240,18 +224,14 @@ controls = [(16, 0), (24, 0), (32, 0), (48, 0)]
 
 targets = bad14 + controls
 
-
 ckpt = base / "data" / "shrink_floor_test.npy"
 
 if os.path.exists(ckpt):
     rows = list(np.load(ckpt, allow_pickle=True))
-
     done = {(r["atoms"], r["seed"], r["method"]) for r in rows}
-
     print(f"resuming - {len(rows)} fits done")
 else:
     rows, done = [], set()
-
 
 
 methods = ["raw", "floor", "shrink", "shrink_floor"]
@@ -263,17 +243,13 @@ for atoms, seed in tqdm(targets):
         continue
 
     a = build_analyzer(seed, atoms=atoms)
-
     var, nprime, nsteps = raw_pieces(a)
-
     sv = shrunk_var(var, nprime, nsteps)
-
 
     built = {"raw": cov_from_var(var, nprime),
              "floor": adaptive_floor(cov_from_var(var, nprime)),
              "shrink": cov_from_var(sv, nprime),
              "shrink_floor": adaptive_floor(cov_from_var(sv, nprime))}
-    
 
     for name in todo:
         cov = built[name]
@@ -292,7 +268,7 @@ for atoms, seed in tqdm(targets):
 
 
 print("\nrecovered D (true = 1)")
-print(f"{'atoms':>5} {'seed':>6} " + " ".join(f"{m:>13}" for m in methods))
+print("atoms   seed " + " ".join(f"{m:>13}" for m in methods))
 for atoms, seed in targets:
     g = {r["method"]: r for r in rows if r["atoms"] == atoms and r["seed"] == seed}
     vals = " ".join(f"{g[m]['d']:13.3f}" if m in g and np.isfinite(g[m]["d"])
@@ -301,12 +277,14 @@ for atoms, seed in targets:
 
 
 
+
 print("\nnegative eigenvalues remaining")
-print(f"{'atoms':>5} {'seed':>6} " + " ".join(f"{m:>13}" for m in methods))
+print("atoms   seed " + " ".join(f"{m:>13}" for m in methods))
 for atoms, seed in targets:
     g = {r["method"]: r for r in rows if r["atoms"] == atoms and r["seed"] == seed}
     vals = " ".join(f"{g[m]['n_neg']:13d}" if m in g else f"{'-':>13}" for m in methods)
     print(f"{atoms:5d} {seed:6d} {vals}  {'CONTROL' if seed == 0 else ''}")
+
 
 
 
