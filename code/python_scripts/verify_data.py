@@ -15,6 +15,7 @@ checkpoint written by another machine.
 
 Usage
     python verify_data.py
+
 """
 
 import zipfile
@@ -67,12 +68,15 @@ def check(path, kind, expect=None):
 
     tag = f"  {path.name:38s} {sz:>12,} B "
 
+
     try:
         if kind == "pairs":
             b = np.load(path)
             ok = sorted(map(tuple, b.tolist())) == known14
             print(tag + f"shape {b.shape}  " +
                   ("PASS (the 14)" if ok else f"FAIL content: {b.tolist()[:3]}..."))
+
+            
         elif kind == "pop":
             r = np.load(path, allow_pickle=True)
             n = len(r)
@@ -83,12 +87,17 @@ def check(path, kind, expect=None):
             print(tag +
                   f"records {n}  per-size {sizes}  anomalies {len(an)}  " +
                   ("PASS" if ok else "FAIL"))
+
+
+            
         elif kind == "rows":
             r = list(np.load(path, allow_pickle=True))
             errs = sum(1 for x in r if "error" in x)
             ok = (expect is None or len(r) == expect) and errs == 0
             print(tag + f"rows {len(r)}  errors {errs}  " +
                   ("PASS" if ok else f"CHECK (expected {expect}, 0 errors)"))
+
+            
         elif kind == "npz":
             with zipfile.ZipFile(path) as z:
                 bad = z.testzip()
@@ -96,6 +105,8 @@ def check(path, kind, expect=None):
             print(tag +
                   ("ZIP-OK  " if bad is None else f"ZIP-CORRUPT at {bad}  ") +
                   f"keys {d.files}")
+
+            
         elif kind == "rw16k":
             r = list(np.load(path, allow_pickle=True))
             D = np.array([x["D"] for x in r])
@@ -104,10 +115,14 @@ def check(path, kind, expect=None):
                         or (x["D"] <= 0) or not np.isfinite(x["D"]))
             ok = len(r) == 16000 and an == [295, 14460, 15770]
             print(tag + f"records {len(r)}  bad {an}  " + ("PASS" if ok else "FAIL"))
+
+
         else:
             b = np.load(path, allow_pickle=True)
             print(tag +
                   f"loads OK  shape/len {getattr(b, 'shape', len(b))}  [historical - report only]")
+
+            
     except Exception as e:
         print(tag + f"LOAD FAILED: {type(e).__name__}: {e}")
 
