@@ -183,11 +183,15 @@ def realfit_with_treatment(seed, treatment_fn, atoms=32, start=2.0):
     return D_post
 
 
+
+
 bad = [tuple(map(int, b)) for b in np.load(base / "data" / "all_bad_seeds_v2.npy")]
 
 c_values = [0.05, 0.10, 0.25, 0.50, 1.00, 2.00]
 
 ckpt = base / "data" / "anomaly_realfit_c_sweep.npy"
+
+
 
 if os.path.exists(ckpt):
     rows = list(np.load(ckpt, allow_pickle=True))
@@ -209,9 +213,13 @@ for atoms, seed in tqdm(bad):
                          "error": f"{type(e).__name__}: {e}"})
         np.save(ckpt, np.array(rows, dtype=object))
 
+
+
 hdr = "  ".join(f"c={c:<5}" for c in c_values)
 
+
 print(f"\n{'atoms':>5} {'seed':>6}  {hdr}")
+
 
 for atoms, seed in bad:
     g = {r["c"]: r for r in rows if r["atoms"] == atoms and r["seed"] == seed}
@@ -227,7 +235,9 @@ for c in c_values:
     frac = np.mean((ds > 0.5) & (ds < 2.0)) if ds.size else np.nan
     print(f"  c={c:<5}  median D = {np.median(ds):6.3f}   recovered (0.5-2.0): {frac:4.0%}")
 
+
 errs = [r for r in rows if "error" in r]
+
 
 if errs:
     print("\nerrors:")
