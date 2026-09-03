@@ -16,6 +16,7 @@ fit by any route other than the patch is silently discarded, so that a test
 performed without it measures nothing at all.
 
     python -m pytest tests/ -v
+    
 """
 
 import sys
