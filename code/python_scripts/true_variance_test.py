@@ -21,18 +21,19 @@ toward-or-away verdict is not, and is not reported in the dissertation.
 
 Usage
     python true_variance_test.py
-
 """
+
+
 import numpy as np
 import matplotlib.pyplot as plt
 from kinisi_helpers import build_analyzer, raw_pieces
+
 
 
 length = 128
 atoms = 32
 n_real = 2000
 lags = np.arange(2, 128)
-
 
 
 def moves_table(jump_size):
@@ -67,6 +68,7 @@ def walk_persistent(atoms, timesteps, jump_size, p, rng):
     Correlation time is -1/ln(p), so p = 0.95 gives about 20 steps and the
     ballistic stretch actually covers part of the lag range. At p = 0.6 it is
     only 2 steps, which is why the earlier attempt saw nothing.
+
     """
     m = moves_table(jump_size)
     choices = np.zeros((atoms, timesteps), dtype=int)
@@ -82,6 +84,7 @@ def walk_persistent(atoms, timesteps, jump_size, p, rng):
 def msd_curve(positions, lags):
     """
     MSD averaged over atoms and over all time origins, as kinisi does.
+    
     """
     out = np.zeros(len(lags))
     for k, n in enumerate(lags):
@@ -91,13 +94,12 @@ def msd_curve(positions, lags):
 
 
 
-
 def n_samples(lags, atoms, timesteps):
     """
     Independent samples behind each lag, as kinisi counts them.
+    
     """
     return atoms * (timesteps - lags)
-
 
 
 
@@ -117,7 +119,6 @@ def true_variance(walk_fn, n_real, seed0=0):
 
 
 
-
 def fit_s15(var, nprime):
     """
     Fit the S-15 amplitude, weighting by sample count as shrink does.
@@ -133,11 +134,14 @@ def fit_s15(var, nprime):
 def shrink(var, nprime, tau_factor=1.0):
     """
     Blend a variance profile toward the fitted analytical form.
+    
     """
     model, _ = fit_s15(var, nprime)
     tau = tau_factor * np.median(nprime[len(nprime) // 2:])
     w = nprime / (nprime + tau)
     return w * var + (1 - w) * model
+
+
 
 
 # The sample counts must be those the package uses, since the analytical form
@@ -149,44 +153,37 @@ _ref = build_analyzer(0, atoms=atoms)
 _, nprime, _ = raw_pieces(_ref)
 
 
+
 systems = {
     "simple walk": lambda rng: walk_simple(atoms, length, np.sqrt(6), rng),
-    "persistent p=0.95": lambda rng: walk_persistent(atoms, length, np.sqrt(6), 0.95, rng)
+    "persistent p=0.95": lambda rng: walk_persistent(atoms, length, np.sqrt(6), 0.95, rng),
 }
 
+
+
 print(f"measuring the true variance from {n_real} independent realisations each\n")
-
 results = {}
-
 for name, fn in systems.items():
     msd_mean, var_true, curves = true_variance(fn, n_real)
-
     model, ahat = fit_s15(var_true, nprime)
-
     shape_err = np.median(np.abs(var_true - model) / model)
 
     # how ballistic is it? slope 1 is diffusive, 2 is ballistic
     lg = np.gradient(np.log(msd_mean), np.log(lags.astype(float)))
-
     results[name] = dict(var_true=var_true, model=model, curves=curves,
                          msd_mean=msd_mean, slope_short=np.median(lg[:12]),
                          slope_long=np.median(lg[-40:]), shape_err=shape_err)
 
+
     print(f"{name}")
-
     print(f"  MSD slope, short lags : {np.median(lg[:12]):.3f}   (1 diffusive, 2 ballistic)")
-
     print(f"  MSD slope, long lags  : {np.median(lg[-40:]):.3f}")
-
     print(f"  S-15 fits the TRUE variance to : {shape_err:.4f}")
-
     print()
 
 
-
 print("does shrink move a single noisy estimate toward the truth or away from it?\n")
-
-print(f"{'system':22} {'raw error':>11} {'shrunk error':>13} {'verdict':>12}")
+print("                system   raw error  shrunk error      verdict")
 
 for name, fn in systems.items():
     var_true = results[name]["var_true"]
@@ -197,29 +194,21 @@ for name, fn in systems.items():
         pos = fn(rng)
 
         # the variance one walk would estimate, from the scatter across atoms
-
         per_atom = np.zeros((atoms, len(lags)))
-
         for k, n in enumerate(lags):
             d = pos[:, n:, :] - pos[:, :-n, :]
             per_atom[:, k] = np.mean(np.sum(d ** 2, axis=2), axis=1)
         var_est = per_atom.var(axis=0, ddof=1) / atoms
 
-
         var_shr = shrink(var_est, nprime)
-
         raw_err.append(np.median(np.abs(var_est - var_true) / var_true))
-
         shr_err.append(np.median(np.abs(var_shr - var_true) / var_true))
 
-
     r, s_ = np.median(raw_err), np.median(shr_err)
-
     verdict = "closer" if s_ < r else "FURTHER"
-
     print(f"{name:22} {r:11.4f} {s_:13.4f} {verdict:>12}")
-
     results[name]["raw_err"], results[name]["shr_err"] = r, s_
+
 
 
 
@@ -227,41 +216,25 @@ fig, ax = plt.subplots(2, 2, figsize=(13, 9))
 
 for col, (name, res) in enumerate(results.items()):
     a = ax[0, col]
-
     a.plot(lags, res["msd_mean"], lw=1.6, color="#378ADD")
-
     a.plot(lags, res["msd_mean"][0] * (lags / lags[0]), "k--", lw=1, label="slope 1")
-
     a.set_xscale("log")
-
     a.set_yscale("log")
-
     a.set_title(f"{name}\nshort-lag slope {res['slope_short']:.2f}", fontsize=10)
-
     a.set_xlabel("lag")
-
     a.set_ylabel("MSD")
-
     a.legend(frameon=False, fontsize=8)
+
 
     a = ax[1, col]
-
     a.plot(lags, res["var_true"], lw=1.4, color="#888780", label="true variance")
-
     a.plot(lags, res["model"], lw=2, color="#1D9E75", label="S-15 shape")
-
     a.set_title(f"S-15 fits truth to {res['shape_err']:.3f}", fontsize=10)
-
     a.set_xlabel("lag")
-
     a.set_ylabel("variance")
-
     a.legend(frameon=False, fontsize=8)
-
 
 
 plt.tight_layout()
-
 plt.savefig("true_variance_test.png", dpi=150, bbox_inches="tight")
-
 plt.show()
