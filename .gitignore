@@ -136,6 +136,20 @@ celerybeat.pid
 *.aof
 *.pid
 
+
+
+
+.DS_Store
+code/.DS_Store
+
+code/plotting files/
+python_files/
+
+model.npz
+no_model.npz
+
+
+
 # RabbitMQ
 mnesia/
 rabbitmq/
