@@ -2,3 +2,4 @@
 data/
 output_data/
 *.npz
+code/python_scripts/test_invariants.py
