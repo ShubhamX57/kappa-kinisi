@@ -1,760 +1,214 @@
-# kappa-kinisi
+# Running Guide
 
-## Investigation of a rare silent failure in Bayesian MSD analysis
+*A step-by-step guide to setting up and running the code for*
+*Investigations into the Numerical Stability of Covariance Matrix Inversions.*
 
-This repository contains the computational work supporting the MSc Scientific Computing with Data Science dissertation:
-
-> **An Investigation into a Rare Silent Failure in Bayesian Mean-Squared-Displacement Analysis**
-
-The project investigates a rare failure in Bayesian diffusion analysis using `kinisi`. The main study uses controlled three-dimensional lattice random walks with a known diffusion coefficient, then tests candidate mechanisms, covariance diagnostics, counterfactual interventions, detection methods, correction strategies, calibration, generalisation, and real molecular-dynamics examples.
-
-The project is organised so that a future researcher can reproduce the analysis, inspect the exploratory notebooks, run individual analysis scripts, and access the saved result/data files.
+This guide assumes no prior familiarity with the project. If anything does not work, the
+[Troubleshooting](#troubleshooting) section at the end lists every error I have seen and its fix.
 
 ---
 
-## Repository structure
+## 1. What is in the submission
 
-```text
-kappa-kinisi/
-├── code/
-│   ├── notebooks/
-│   │   ├── Anomalous_D_Value_Inspect_full.ipynb
-│   │   ├── Suspect_A_Testing.ipynb
-│   │   ├── Suspect_B_Testing.ipynb
-│   │   ├── flooring.ipynb
-│   │   ├── method_comparison.ipynb
-│   │   ├── descriptive.ipynb
-│   │   ├── model-nodel.ipynb
-│   │   └── ...
-│   │
-│   └── python_scripts/
-│       ├── bootstrap_validation.py
-│       ├── detector_specificity.py
-│       ├── nonreversal_recovery_study.py
-│       ├── persistent_shape_check.py
-│       ├── realfit_c_sweep.py
-│       ├── reconstruction.py
-│       ├── regenerate_population_v2.py
-│       ├── run_anomaly_harness.py
-│       ├── shrink_floor_test.py
-│       ├── shrink_validation.py
-│       ├── surgical_swap_test.py
-│       ├── true_variance_test.py
-│       ├── variance_repair_test.py
-│       ├── verify_data.py
-│       ├── kinisi_helpers.py
-│       ├── make_all_figures.py
-│       ├── make_diagrams.py
-│       ├── make_si_figures.py
-│       └── plot_style.py
-│
-├── data/
-│   ├── population and anomaly result files
-│   ├── correction/calibration results
-│   ├── real-data inputs
-│   └── large `.npz` trajectory files
-│
-├── plots/
-│   └── generated figures
-│
-└── README.md
+```
+Application_code/
+├── data/               all result files and inputs - nothing needs downloading
+├── notebooks/          the seven analysis notebooks
+├── python_scripts/     the fourteen analysis scripts, plus shared helpers
+└── plots/              output folder for any figures the code writes
 ```
 
-The exact contents of `notebooks/`, `python_scripts/`, `data/`, and `plots/` may change as the project is extended. The important distinction is:
-
-- **`code/notebooks/`**: interactive investigation and development notebooks.
-- **`code/python_scripts/`**: reusable analysis, validation, reconstruction and figure-generation scripts.
-- **`data/`**: saved inputs, checkpoints and numerical outputs.
-- **`plots/`**: generated figures used by the dissertation and supporting material.
+The `data/` folder is included in full, so **every file can be run without downloading anything**.
+The code finds this folder automatically, wherever you launch it from - see step 4.
 
 ---
 
-# 1. Software requirements
+## 2. Setting up the environment
 
-The main analysis was performed using:
+The code needs Python 3.11 and a fixed version of the `kinisi` package. The version matters: the
+analysis rebuilds an internal matrix from what `kinisi` stores, and that storage changed between
+releases, so a different version will not give the same results.
 
-- **Python 3.11**
-- **kinisi 2.0.5**
-- NumPy
-- SciPy
-- MDAnalysis
-- pymatgen
-- scipp
-- matplotlib
-- SciencePlots
-- statsmodels
-- tqdm
-- emcee
+### Option A - conda (recommended)
 
-The report records Python 3.11 and `kinisi` 2.0.5 as the core computational environment.
+```bash
+conda env create -f environment.yml
+conda activate kappa-kinisi
+```
 
-Because some experiments depend on the exact numerical behaviour of the software stack, using the same Python/`kinisi` versions is recommended when reproducing dissertation results.
-
----
-
-# 2. Create the environment
-
-A virtual environment can be created with Python 3.11:
+### Option B - pip and a virtual environment
 
 ```bash
 python3.11 -m venv .venv
-source .venv/bin/activate
+source .venv/bin/activate           # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
-Upgrade the packaging tools:
+Both install the same packages. To confirm it worked:
 
 ```bash
-python -m pip install --upgrade pip setuptools wheel
+python -c "import kinisi, numpy, scipp; print('environment ready')"
 ```
 
-Install the required packages:
-
-```bash
-pip install \
-    kinisi==2.0.5 \
-    numpy \
-    scipy \
-    MDAnalysis \
-    pymatgen \
-    scipp \
-    matplotlib \
-    SciencePlots \
-    statsmodels \
-    tqdm \
-    emcee
-```
-
-Check the critical versions:
-
-```bash
-python --version
-python -c "import kinisi; print(kinisi.__version__)"
-```
-
-Expected:
-
-```text
-Python 3.11.x
-2.0.5
-```
-
-If an environment specification is supplied separately with the project, prefer that specification over installing unpinned packages.
+If that prints `environment ready`, you are set.
 
 ---
 
-# 3. Getting the repository
+## 3. Where the data lives, and how the code finds it
 
-Clone the repository:
+Every result file is already in the `data/` folder inside the submission. **You do not need to
+move it, copy it, or download anything.**
 
-```bash
-git clone https://github.com/ShubhamX57/kappa-kinisi.git
-cd kappa-kinisi
-```
+The code locates `data/` by searching upward from wherever it is launched until it finds that
+folder. This means you can run a script or notebook from the project root, from inside
+`python_scripts/`, or from inside `notebooks/`, and it will always find the data. The only
+requirement is that you launch from *somewhere inside* the `Application_code` folder.
 
-If the repository uses Git LFS for the large data files, install Git LFS before downloading the data:
-
-```bash
-git lfs install
-git lfs pull
-```
-
-Check whether the large files are present:
-
-```bash
-ls -lh data/
-```
-
-The largest trajectory files are several hundred MB, so they are handled separately from ordinary Git blobs.
 
 ---
 
-# 4. Accessing the data
+## 4. Running the scripts
 
-The `data/` directory contains both raw inputs and saved results from the computational experiments.
+Open a terminal in the `Application_code` folder with the environment activated, and run any script
+by name:
 
-Typical groups of files include:
-
-### Population study
-
-```text
-failure_population*.npy
-rw_*records*.npy
-all_bad_seeds*.npy
+```bash
+python python_scripts/reconstruction.py
 ```
 
-These contain the large random-walk population results and the identified anomalous seeds.
+Each script prints its results to the terminal and, where relevant, saves a file into `data/`.
 
-### Diagnostic and mechanism tests
+**Because all the data is provided, every script runs in seconds to minutes.** A script that would
+otherwise take hours to compute its input simply loads the finished file instead.
 
-```text
-eigen_swap_test.npy
-negatives_vs_atoms.npy
-surgical_swap_test.npy
+### The recommended first run
+
+To confirm everything is working, start with the two quickest scripts. Neither takes more than a
+few seconds:
+
+```bash
+python python_scripts/verify_data.py     # checks every data file is present and intact
+python python_scripts/reconstruction.py  # reproduces a headline result
 ```
 
-These contain outputs from eigenvalue/eigenvector, sampling and intervention experiments.
+`verify_data.py` prints a line for each file in `data/`; if it runs without error, the data is
+sound. `reconstruction.py` demonstrates the central technical point of the project - that the
+matrix which caused the failure can be rebuilt from what the package keeps.
 
-### Correction and calibration tests
+### What each script does
 
-```text
-shrink_floor_test.npy
-variance_repair_test.npy
-shrink_coverage.npy
-bootstrap_coverage.npy
-tau_sweep.npy
-kinisi_vs_shrink.npy
-```
+| script | what it shows | runtime with data |
+|---|---|---|
+| `verify_data.py` | every data file is present and readable | seconds |
+| `reconstruction.py` | the raw covariance can be rebuilt; the injection is faithful | seconds |
+| `regenerate_population_v2.py` | the 64,000-fit population; the fourteen affected cases | seconds* |
+| `surgical_swap_test.py` | replacing one direction of 126 repairs every affected fit | seconds |
+| `run_anomaly_harness.py` | recovery under the spectral treatments | seconds |
+| `realfit_c_sweep.py` | how the adaptive-floor coefficient was chosen | seconds |
+| `variance_repair_test.py` | recovery under the variance treatments | seconds |
+| `shrink_floor_test.py` | the four treatments compared side by side | seconds |
+| `shrink_validation.py` | the treatment does not distort healthy fits | seconds* |
+| `bootstrap_validation.py` | why the resampled covariance is misleading | seconds |
+| `detector_specificity.py` | the detection check's false-alarm rate | seconds |
+| `nonreversal_recovery_study.py` | the correction works on a different system | seconds* |
+| `persistent_shape_check.py` | the treatment's assumption under fast motion | seconds |
+| `true_variance_test.py` | the true uncertainty, measured directly | seconds |
 
-These contain results used to compare correction strategies and assess calibration.
-
-### Generalisation tests
-
-```text
-nonreversal_population.npy
-nonreversal_bad_seeds.npy
-nonreversal_repair.npy
-```
-
-### Large molecular-dynamics data
-
-```text
-kinisi_rw_data_1.npz
-model.npz
-no_model.npz
-```
-
-These are large input datasets and may require Git LFS.
-
-### Archive files
-
-Files under:
-
-```text
-data/archive/
-```
-
-are retained as historical/intermediate project material where applicable. They are not necessarily required for reproducing the principal dissertation results.
+*These scripts *generate* their data from scratch if the file is absent, which takes much longer
+(up to eight hours for the population). With the provided `data/` folder they load the finished
+file and return at once. **Leave the provided files in place to keep them fast.**
 
 ---
 
-# 5. Running the notebooks
+## 5. Running the notebooks
 
-The notebooks document the development and investigation of the project.
-
-Start Jupyter from the repository root:
+From inside the `notebooks/` folder, with the environment activated:
 
 ```bash
+cd notebooks
 jupyter lab
 ```
 
-or:
+Then open a notebook and run its cells from the top (**Kernel >> Restart and Run All** runs the
+whole thing). Each notebook explains what every cell does before it runs and what the result means
+afterwards.
 
-```bash
-jupyter notebook
-```
+Start with **`Anomalous_D_Value_Inspect_full.ipynb`** - it is the main notebook and covers the
+whole investigation in order.
 
-Open:
+The other six each cover one part:
 
-```text
-code/notebooks/
-```
-
-The principal notebook is:
-
-```text
-Anomalous_D_Value_Inspect_full.ipynb
-```
-
-The main hypothesis-specific notebook is:
-
-```text
-Suspect_A_Testing.ipynb
-```
-
-Other notebooks investigate individual correction, descriptive, flooring and comparison experiments.
-
-## Python helper modules used by notebooks
-
-Some notebooks import modules from:
-
-```text
-code/python_scripts/
-```
-
-For example:
-
-```python
-from kinisi_helpers import build_analyzer
-from plot_style import use_style
-```
-
-If Python cannot find these modules because the notebook is being run from `code/notebooks/`, add the script directory to `sys.path` before importing:
-
-```python
-from pathlib import Path
-import sys
-
-sys.path.insert(0, str(Path.cwd().parent / "python_scripts"))
-```
-
-Alternatively, set the module path before launching Jupyter:
-
-```bash
-export PYTHONPATH="$PWD/code/python_scripts:$PYTHONPATH"
-jupyter lab
-```
-
----
-
-# 6. Running the Python analysis scripts
-
-Move into the script directory:
-
-```bash
-cd code/python_scripts
-```
-
-The scripts can then be run individually with:
-
-```bash
-python script_name.py
-```
-
-For example:
-
-```bash
-python regenerate_population_v2.py
-```
-
-or:
-
-```bash
-python variance_repair_test.py
-```
-
-The script names indicate their role:
-
-| Script | Purpose |
+| notebook | topic |
 |---|---|
-| `regenerate_population_v2.py` | Regenerate/check the main controlled population |
-| `run_anomaly_harness.py` | Run the anomaly analysis harness |
-| `reconstruction.py` | Reconstruct and compare covariance matrices |
-| `verify_data.py` | Check saved data and analysis inputs |
-| `detector_specificity.py` | Evaluate the Bayesian/OLS detector |
-| `nonreversal_recovery_study.py` | Test generalisation to correlated-step walks |
-| `persistent_shape_check.py` | Examine persistent/ballistic behaviour |
-| `shrink_validation.py` | Validate variance shrinkage |
-| `shrink_floor_test.py` | Compare shrinkage and flooring |
-| `variance_repair_test.py` | Test variance-profile repair |
-| `true_variance_test.py` | Compare estimated variance with an independently measured reference |
-| `bootstrap_validation.py` | Test bootstrap-based variance estimation |
-| `surgical_swap_test.py` | Test local eigenvector intervention |
-| `realfit_c_sweep.py` | Evaluate correction behaviour over coefficient values |
+| `Anomalous_B_Value_Inspect_full.ipynb` | where the failure was first noticed |
+| `Suspect_A_Testing.ipynb` | ruling out window overlap as the cause |
+| `Suspect_B_Testing.ipynb` | confirming sampling noise as the cause |
+| `model-nodel.ipynb` | comparing the modelled and measured matrices |
+| `flooring.ipynb` | surveying ways to repair the matrix |
+| `method_comparison.ipynb` | comparing repair and inversion methods |
 
-Not every script is required for a routine reproduction of the main dissertation figures. Some scripts correspond to exploratory, validation or follow-up experiments.
+All notebooks read from the provided `data/` folder, so they run without any preparation beyond
+activating the environment.
 
 ---
 
-# 7. Figure generation
+## 6. Running the tests (optional)
 
-Figure-generation utilities are kept in:
-
-```text
-code/python_scripts/
-```
-
-Important files include:
-
-```text
-make_all_figures.py
-make_diagrams.py
-make_si_figures.py
-plot_style.py
-```
-
-The plotting style is centralised in:
-
-```text
-plot_style.py
-```
-
-so that figures use consistent dimensions, typography, colours, labels and export settings.
-
-Generated figures are written to:
-
-```text
-plots/
-```
-
-The scripts generally save both:
-
-```text
-.pdf
-.png
-```
-
-The PDF version should be preferred when figures are inserted into the dissertation because it preserves vector graphics.
-
----
-
-# 8. Reproducing the main population study
-
-The main controlled study contains:
-
-```text
-64,000 fits
-16,000 fits at 16 atoms
-16,000 fits at 24 atoms
-16,000 fits at 32 atoms
-16,000 fits at 48 atoms
-```
-
-The random-walk system has:
-
-```text
-128 frames
-126 lag values
-2–128 s lag range
-1 s time step
-```
-
-The walk is constructed so that the true diffusion coefficient is known analytically.
-
-The population-generation script writes checkpointed results so that later analyses can operate on the saved results rather than silently regenerating the population.
-
-For a fresh regeneration, run the relevant population script from:
+A small test suite checks the properties the results rely upon. It needs no data and runs in under
+a second:
 
 ```bash
-cd code/python_scripts
-python regenerate_population_v2.py
+python -m pytest tests/ -v
 ```
 
-This can be computationally expensive because the original study involved a large number of Bayesian fits.
+All eleven tests should pass.
 
 ---
 
-# 9. Reproducing the anomaly analysis
+## Troubleshooting
 
-The principal failure study identifies the anomalous cases by comparing the returned diffusion coefficient with the healthy population.
+**`ModuleNotFoundError: No module named 'kinisi'` (or numpy, scipp, …)**
+The environment is not active. Run `conda activate kappa-kinisi`, or
+`source .venv/bin/activate`, and try again.
 
-The dissertation reports:
+**`FileNotFoundError` ending in a `.npy` or `.npz` name**
+The code could not find the `data/` folder. Make sure you are running from somewhere *inside* the
+`Application_code` folder, and that `data/` is still there with its files in it. Running
+`python python_scripts/verify_data.py` will confirm what the code can see.
 
-```text
-14 affected cases
-out of
-64,000 controlled fits
-```
+**A script seems to hang for a long time**
+One of the starred scripts is regenerating its data because the file is missing. Stop it
+(Ctrl-C), check that the file it needs is present in `data/`, and run it again - it should then
+finish in seconds. The files most worth checking are `failure_population_v2.npy` and
+`all_bad_seeds_v2.npy`.
 
-The identified seeds are stored in the population/anomaly result files under `data/`.
+**A notebook cell fails with a name that is not defined**
+The cells must be run in order. Use **Kernel >> Restart and Run All** rather than running cells
+individually.
 
-The anomaly analysis can therefore normally be reproduced from the saved checkpoint/result files without rerunning the entire 64,000-fit population.
+**`kinisi` behaves unexpectedly or gives different numbers**
+Check the version: `python -c "import kinisi; print(kinisi.__version__)"` should print `2.0.5`.
+A different version will not reproduce these results, for the reason given in step 2.
 
----
-
-# 10. Important distinction: raw versus treated covariance
-
-A central part of the project is the distinction between:
-
-1. the **raw reconstructed covariance**, and
-2. the covariance after kinisi's internal treatment.
-
-The raw covariance is reconstructed from the stored variance profile and sample counts so that the failure can be studied before the package's internal treatment.
-
-The relevant helper is:
-
-```text
-code/python_scripts/kinisi_helpers.py
-```
-
-The dissertation verifies the reconstruction against matrices retained by `kinisi`.
-
-This distinction is important when interpreting results. A result based on the treated covariance is not automatically a result about the raw covariance that generated the failure.
+**The results print but no figure appears**
+The scripts and notebooks are written to report their findings as numbers and, in the notebooks, as
+plots. The standalone figure-generation code is not part of this submission; the numbers printed
+are the results themselves.
 
 ---
 
-# 11. Counterfactual and correction experiments
+## A note on how the analysis works, for context
 
-Several experiments modify covariance components and rerun the genuine Bayesian fit.
+Three facts underpin everything, and knowing them makes the code easier to follow.
 
-These include:
+The package stores only the covariance matrix *after* its own repair has been applied, so the
+matrix that actually caused a failure is no longer available and has to be **rebuilt from the
+stored numbers**. This reconstruction is what `reconstruction.py` verifies.
 
-- eigenvalue/eigenvector substitutions;
-- single-direction eigenvector interventions;
-- adaptive eigenvalue flooring;
-- variance-profile reconstruction;
-- variance shrinkage;
-- resampled covariance;
-- existing kinisi reconditioning.
+A repaired matrix cannot simply be handed to the fitting routine, because that routine rebuilds the
+covariance internally and would ignore it. Every experiment therefore **replaces the routine's
+matrix-building step** so that the repaired matrix is actually used.
 
-The important methodological point is that the project does not rely only on a least-squares proxy for these tests. Treated covariance matrices are injected into the Bayesian analysis pathway so that the actual likelihood is evaluated.
-
-This is one reason why the helper/injection code should be kept together and run using the same environment.
-
----
-
-# 12. Real molecular-dynamics data
-
-The project also examines real molecular-dynamics examples distributed with `kinisi`.
-
-These experiments are intended to establish whether the numerical behaviour observed in the controlled system is present outside the random-walk test system.
-
-They do **not** provide ground truth for the real material diffusion coefficient, so they are not used as accuracy benchmarks in the same way as the controlled random-walk population.
-
----
-
-# 13. Reproducibility and saved results
-
-The principal computational experiments were checkpointed during execution.
-
-This means that most analysis scripts should read previously saved results rather than silently refitting the entire population.
-
-When reproducing a result, check first whether the corresponding `.npy` result already exists in:
-
-```text
-data/
-```
-
-This is especially important for the population-scale experiments because rerunning them unnecessarily can be expensive.
-
----
-
-# 14. Expected scientific workflow
-
-A useful way to understand the project is:
-
-```text
-Controlled random walks
-        ↓
-64,000 Bayesian fits
-        ↓
-Identify rare anomalous cases
-        ↓
-Reconstruct raw covariance
-        ↓
-Test competing explanations
-        ↓
-Test covariance diagnostics
-        ↓
-Investigate eigenvector geometry
-        ↓
-Counterfactual interventions
-        ↓
-Develop Bayesian–OLS consistency check
-        ↓
-Evaluate correction strategies
-        ↓
-Calibration / healthy controls
-        ↓
-Generalisation tests
-        ↓
-Real molecular-dynamics examples
-```
-
-The repository is organised to mirror this workflow.
-
----
-
-# 15. Reproducibility checklist
-
-Before treating a reproduction as comparable to the dissertation results, check:
-
-```text
-[ ] Python 3.11
-[ ] kinisi 2.0.5
-[ ] Required scientific Python packages installed
-[ ] Correct branch/version of the repository checked out
-[ ] Large LFS data downloaded
-[ ] data/ directory available
-[ ] code/python_scripts available on Python path
-[ ] Correct random seeds used
-[ ] Existing checkpoint files not accidentally overwritten
-[ ] Figures generated from the intended saved result files
-```
-
-For publication figures, use the generated PDF files rather than screenshots of notebook output.
-
----
-
-# 16. Branches
-
-The repository may contain analysis branches corresponding to different stages or hypothesis-specific investigations.
-
-Examples include:
-
-```text
-main
-suspect-a-testing
-suspect-b-testing
-```
-
-The `main` branch should be treated as the primary integrated version.
-
-The hypothesis-specific branches preserve focused analysis that contributed to the investigation.
-
-When comparing results across branches, always check:
-
-```bash
-git branch
-git log --oneline --max-count=10
-```
-
-and record the commit used for the result.
-
----
-
-# 17. Troubleshooting
-
-### `ModuleNotFoundError: kinisi_helpers`
-
-Make sure `code/python_scripts/` is on the Python path:
-
-```bash
-export PYTHONPATH="$PWD/code/python_scripts:$PYTHONPATH"
-```
-
-or add the path from inside the notebook:
-
-```python
-from pathlib import Path
-import sys
-
-sys.path.insert(0, str(Path.cwd().parent / "python_scripts"))
-```
-
-### `FileNotFoundError` for a saved dataset
-
-Check that the notebook/script is being run from the expected directory and that the `data/` directory exists:
-
-```bash
-ls data/
-```
-
-Avoid changing relative paths until you have checked the current working directory:
-
-```python
-from pathlib import Path
-print(Path.cwd())
-```
-
-### Git reports that `data/` is ignored
-
-Some data may be intentionally excluded from ordinary Git tracking. For files that are deliberately versioned:
-
-```bash
-git add -f data/<filename>
-```
-
-Large files should use Git LFS where configured.
-
-### Git LFS command is unavailable
-
-Install Git LFS first:
-
-```bash
-brew install git-lfs
-git lfs install
-```
-
-Then retrieve the large objects:
-
-```bash
-git lfs pull
-```
-
-### A script fails because of an old notebook state
-
-Rebuild the analyser/process from scratch rather than reusing an object that may have been modified or injected during another experiment. Several validation steps in this project depend on avoiding state leakage between experiments.
-
----
-
-# 18. Code documentation
-
-The code is intended to be readable by someone who did not perform the original investigation.
-
-Reusable functions should contain docstrings describing:
-
-- what the function does;
-- the main inputs;
-- returned values;
-- important assumptions.
-
-Analysis scripts should also make clear which scientific question they address.
-
-The notebook documentation is more explanatory, while the standalone scripts should remain focused on executable analysis.
-
----
-
-# 19. Relationship to the dissertation
-
-The dissertation is the authoritative source for the scientific interpretation of the results.
-
-This repository provides the computational record behind it.
-
-The main report analyses include:
-
-- frequency and reproducibility of the failure;
-- covariance reconstruction;
-- competing mechanism tests;
-- spectral diagnostics;
-- eigenvector localisation;
-- counterfactual eigenvector intervention;
-- Bayesian/OLS detection;
-- correction comparisons;
-- calibration;
-- generalisation;
-- real molecular-dynamics data.
-
-The supplementary material provides additional case-by-case and verification information.
-
----
-
-# 20. Citation and reuse
-
-If you use the code or results from this repository, please cite the associated dissertation and the relevant software/literature sources listed in the dissertation bibliography.
-
-The repository is intended to support reproducibility and future research. Before reusing a numerical result, check the script, saved input/result file, branch and commit from which it was produced.
-
----
-
-## Quick start
-
-For someone returning to the project, the shortest route is:
-
-```bash
-git clone https://github.com/ShubhamX57/kappa-kinisi.git
-cd kappa-kinisi
-
-git lfs install
-git lfs pull
-
-python3.11 -m venv .venv
-source .venv/bin/activate
-
-pip install \
-    kinisi==2.0.5 \
-    numpy scipy MDAnalysis pymatgen scipp \
-    matplotlib SciencePlots statsmodels tqdm emcee
-
-export PYTHONPATH="$PWD/code/python_scripts:$PYTHONPATH"
-
-jupyter lab
-```
-
-Then open:
-
-```text
-code/notebooks/Anomalous_D_Value_Inspect_full.ipynb
-```
-
-For standalone analysis:
-
-```bash
-cd code/python_scripts
-python <script_name>.py
-```
-
----
-
-## Project status
-
-The repository contains the computational analysis supporting the submitted MSc dissertation. Some files are intermediate or exploratory by design. The principal saved results and documented scripts should be preferred over rerunning exploratory development notebooks when reproducing the reported figures and tables.
+Finally, two number scales appear in the output. The package's own scale reports a healthy result
+near 9,980; the experiments report a rescaled value near 1. They describe the same thing four
+orders of magnitude apart, so a result near 10,000 and a result near 1 can both be correct.
