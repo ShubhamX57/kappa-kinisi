@@ -6,6 +6,14 @@
 This guide assumes no prior familiarity with the project. If anything does not work, the
 [Troubleshooting](#troubleshooting) section at the end lists every error I have seen and its fix.
 
+## kindly check - `cov/` and `msd/` variable while running file if got error of `not defined/`.
+
+```bash
+
+cov = d["cov"]
+msd = d["msd"]
+
+```
 ---
 
 ## 1. What is in the submission
